@@ -11,8 +11,10 @@ using Microsoft.Owin.Security;
 using Mvc2.Models;
 
 namespace Mvc2.Controllers
+
 {
     [Authorize]
+
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
