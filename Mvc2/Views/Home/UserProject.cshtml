@@ -1,0 +1,64 @@
+﻿@model List<IndexProjectViewModel>
+
+@{
+    ViewBag.Title = "AllProject";
+}
+
+<h2>AllProject</h2>
+
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row purchace-popup">
+            <div class="col-12">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 grid-margin stretch-card">
+                <div class="card card-statistics">
+                    <div class="card-body">
+                        <div class="clearfix">
+                            <div class="float-left">
+                                <i class="mdi mdi-cube text-danger icon-lg"></i>
+                            </div>
+                            <div class="float-right">
+
+                                <div class="fluid-container">
+                                    @if (!Model.Any())
+                                    {
+                                        <span style="margin-top:15px;">
+                                            <span><strong>You have no Project</strong></span>
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        foreach (var record in Model)
+                                        {
+                                            <div>
+                                                <p>@record.ProjectName</p>
+                                                <p>@record.DateCreated</p>
+                                                <p>@record.DateUpdated</p>
+                                                <p>
+
+
+                                                    <a href="@Url.Action("Edit", "Home", new { id = record.ProjectId })">Edit</a>
+
+                                                </p>
+
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-muted mt-3 mb-0">
+
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>

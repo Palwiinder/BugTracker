@@ -46,22 +46,22 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="~/Views/Home/Index.cshtml">
+                <a class="nav-link" href="@Url.Action("Index","Home")">
                     <i class="menu-icon mdi mdi-television"></i>
                     <span class="menu-title">Dashboard</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="pages/charts/chartjs.html">
+                <a class="nav-link" href="@Url.Action("Index","AllProject")">
                     <i class="menu-icon mdi mdi-chart-line"></i>
-                    <span class="menu-title">All Projects</span>
+                    <span class="menu-title">My Projects</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="pages/tables/basic-table.html">
                     <i class="menu-icon mdi mdi-table"></i>
-                    <span class="menu-title">My Project</span>
+                    <span class="menu-title">All Projects</span>
                 </a>
             </li>
 
@@ -70,7 +70,7 @@
                     
                         <a class="menu-title" href="@Url.Action("AssignRole", "User")">User Pages</a>
                         <i class="menu-arrow"></i>
-                    </a>
+                    
                     <div class="collapse" id="auth">
                         <ul class="nav flex-column sub-menu"></ul>
                     </div>
@@ -96,30 +96,9 @@
                                 <div class="float-right">
 
                                     <div class="fluid-container">
-                                        @if (!Model.Any())
-                                        {
-                                            <span style="margin-top:15px;">
-                                                <p><strong>You have no Project</strong></p>
-                                            </span>
-                                        }
-                                        else
-                                        {
-                                            foreach (var record in Model)
-                                            {
-                                                <div>
-                                                    <p>@record.ProjectName</p>
-                                                    <p>@record.DateCreated</p>
-                                                    <p>@record.DateUpdated</p>
-                                                    <p>
-
-
-                                                        <a href="@Url.Action("Edit", "Home", new { id = record.ProjectId })">Edit</a>
-
-                                                    </p>
-                                                    
-                                                </div>
-                                            }
-                                        }
+                                       
+                                          
+                                        
                                     </div>
                                 </div>
                             </div>
