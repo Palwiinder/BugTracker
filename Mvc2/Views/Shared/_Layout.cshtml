@@ -1,47 +1,4 @@
-﻿@*<!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>@ViewBag.Title - My ASP.NET Application</title>
-        @Styles.Render("~/Content/css")
-        @Scripts.Render("~/bundles/modernizr")
-
-    </head>
-    <body>
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-                </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                        <li>@Html.ActionLink("About", "About", "Home")</li>
-                        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    </ul>
-                    @Html.Partial("_LoginPartial")
-                </div>
-            </div>
-        </div>
-        <div class="container body-content">
-            @RenderBody()
-            <hr />
-            <footer>
-                <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-            </footer>
-        </div>
-
-        @Scripts.Render("~/bundles/jquery")
-        @Scripts.Render("~/bundles/bootstrap")
-        @RenderSection("scripts", required: false)
-    </body>
-    </html>*@
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,24 +17,146 @@
     <link rel="stylesheet" href="~/Template/css/style.css">
     <!-- endinject -->
     <link rel="shortcut icon" href="~/Template/images/favicon.png" />
+    @RenderSection("css", false)
 </head>
-<body>
 
+<body>
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+        <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+            <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
+                <h3>
+                    Bug Tracker
+                </h3>
+            </div>
+            <div class="navbar-menu-wrapper d-flex align-items-center">
+                <style>
+                    .dropbtn {
+                        background-color: #4CAF50;
+                        color: white;
+                        padding: 16px;
+                        font-size: 16px;
+                        border: none;
+                        cursor: pointer;
+                    }
+
+                    .dropdown {
+                        position: relative;
+                        display: inline-block;
+                    }
+
+                    .dropdown-content {
+                        display: none;
+                        position: absolute;
+                        background-color: lightblue;
+                        min-width: 160px;
+                        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                        z-index: 1;
+                    }
+
+                        .dropdown-content a {
+                            color: blue;
+                            text-decoration: none;
+                        }
+
+                            .dropdown-content a:hover {
+                                background-color: #f1f1f1
+                            }
+
+                    .dropdown:hover .dropdown-content {
+                        display: block;
+                    }
+
+                    .dropdown:hover .dropbtn {
+                        background-color: blue;
+                    }
+                </style>
+
+                <div class="dropdown">
+                    <button class="btn-facebook">Account</button>
+                    <div class="dropdown-content">
+                        <a>@Html.Partial("_LoginPartial", new { @class = "nav-link" })</a>
+                        <a>
+                            @Html.ActionLink("Account Settings", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage",
+       })
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+            <span class="mdi mdi-menu"></span>
+        </button>
+    </div>
+    <!-- partial -->
+    <div>
+        <!-- partial:partials/_sidebar.html -->
+        <nav class="sidebar style = " Display:inline;>
+            <ul class="nav">
+                <li class="nav-item nav-profile">
+                    <div class="nav-link">
+                        <div class="user-wrapper">
+                            <div class="profile-image">
+                                <img src="~/Template/images/faces/face1.jpg" alt="profile image">
+                            </div>
+                            <div class="text-wrapper">
+                                <p class="profile-name">Richard V.Welsh</p>
+                                <div>
+                                    <small class="designation text-muted">Manager</small>
+                                    <span class="status-indicator online"></span>
+                                </div>
+                            </div>
+                        </div>
+                        @*@Html.ActionLink("CreateProject", "CreateProject", "AllProject", new { @class = "nav-link" })*@
+
+                        <a class="btn btn-success btn-block" href="@Url.Action("CreateProject", "AllProject")">
+                            New Project
+
+                            <i class="mdi mdi-plus"></i>
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    @*@Html.ActionLink("Dashboard", "Index", "Home", new { @class = "nav-link" })*@
+
+                    <a class="nav-link" href="@Url.Action("Index","Home")">
+                        <i class="menu-icon mdi mdi-television"></i>
+                        <span class="menu-title">Dashboard</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    @*@Html.ActionLink("MyProjects", "Projects", "AllProject", new { @class = "nav-link" })*@
+                    <a class="nav-link" href="@Url.Action("Index","AllProject")">
+                        <i class="menu-icon mdi mdi-chart-line"></i>
+                        <span class="menu-title">My Projects</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("AllProjects","AllProject")">
+                        <i class="menu-icon mdi mdi-table"></i>
+                        <span class="menu-title">All Projects</span>
+                    </a>
+                </li>
+            </ul>
+
+        </nav>
+    </div>
     @RenderBody()
     @*@Html.Partial("_LoginPartial")*@
 
     <footer class="footer">
         <div class="container-fluid clearfix">
-            <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">
-                Copyright © 2018
-                <a href="http://www.bootstrapdash.com/" target="_blank">Bootstrapdash</a>. All rights reserved.
-            </span>
+
             <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">
                 Hand-crafted & made with
                 <i class="mdi mdi-heart text-danger"></i>
             </span>
         </div>
     </footer>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>
 <!-- partial -->

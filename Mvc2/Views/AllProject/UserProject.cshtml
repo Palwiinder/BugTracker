@@ -4,6 +4,19 @@
     ViewBag.Title = "AllProject";
 }
 
+@section css {
+    <link rel="stylesheet"
+          href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+}
+@section Scripts {
+    <script type="text/javascript"
+            src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#sample-datatables').DataTable();
+        });</script>
+}
+
 <h2>AllProject</h2>
 
 <div class="main-panel">
@@ -38,9 +51,8 @@
                                                 <p>@record.ProjectName</p>
                                                 <p>@record.DateCreated</p>
                                                 <p>@record.DateUpdated</p>
+                                                <p>@record.Tickets</p>
                                                 <p>
-
-
                                                     <a href="@Url.Action("Edit", "Home", new { id = record.ProjectId })">Edit</a>
 
                                                 </p>
@@ -51,14 +63,9 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="text-muted mt-3 mb-0">
-
-                        </p>
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
 </div>

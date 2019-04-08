@@ -10,6 +10,7 @@ namespace Mvc2.Models.ViewModel
     {
         [Required]
         public string ProjectName { get; set; }
+        public string Tickets { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
     }

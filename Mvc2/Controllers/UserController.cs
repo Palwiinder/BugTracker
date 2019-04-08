@@ -18,14 +18,13 @@ namespace Mvc2.Controllers
         {
             return View(context.Users.ToList());
         }
-
+        [Authorize(Roles = "Admin")]
         public ActionResult AssignRole(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
                 return RedirectToAction(nameof(UserController.Index));
             }
-            //var id = User.Identity.GetUserId();
             var model = new RoleViewModel();
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
@@ -46,37 +45,21 @@ namespace Mvc2.Controllers
                 }
             }
 
-            //var a = roles.Where(role => userRoles.Any(r => r != role)).ToList();
-
             model.AddRoles = new MultiSelectList(a.ToList(), userRoles);
             if (user.Roles.Any())
             {
                 model.RemoveRoles = new MultiSelectList(userRoles, roles);
             }
 
-
-
-            //var userRoleHelper = new RolesHelper();
-            //if (!ModelState.IsValid)
-            //{
-            //    return View();
-            //}
-            //var user = context.Users.FirstOrDefault(p => p.Id == id);
             if (user == null)
             {
                 return RedirectToAction(nameof(UserController.Index));
             }
-            //model.UserId = id;
-            //model.UserName = user.UserName;
-            //var roles = userRoleHelper.ListUserRoles();
-            //var userRoles = userRoleHelper.UsersInRole(id);
-
-            //model.Roles = new MultiSelectList( "DisplayName", userRoles);
-
             return View(model);
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,ProjectManager")]
         public ActionResult AssignRole(RoleViewModel viewModel)
         {
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));

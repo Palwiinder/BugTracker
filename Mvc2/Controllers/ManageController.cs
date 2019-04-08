@@ -22,7 +22,7 @@ namespace Mvc2.Controllers
             DbContext = new ApplicationDbContext();
         }
 
-            public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -34,9 +34,9 @@ namespace Mvc2.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -56,11 +56,7 @@ namespace Mvc2.Controllers
         // GET: /Manage/Index
         private ApplicationDbContext DbContext;
 
-        
-        
-
         [HttpGet]
-       
         public ActionResult Edit(string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
@@ -81,7 +77,6 @@ namespace Mvc2.Controllers
         }
 
         [HttpPost]
-        
         public ActionResult Edit(string userId, EditViewModel formData)
         {
             if (!ModelState.IsValid)
@@ -97,8 +92,6 @@ namespace Mvc2.Controllers
             DbContext.SaveChanges();
             return RedirectToAction(nameof(HomeController.Index));
         }
-
-        
 
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
@@ -382,7 +375,7 @@ namespace Mvc2.Controllers
             base.Dispose(disposing);
         }
 
-#region Helpers
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -433,6 +426,6 @@ namespace Mvc2.Controllers
             Error
         }
 
-#endregion
+        #endregion
     }
 }

@@ -14,8 +14,8 @@ namespace Mvc2.Controllers
     public class AllProjectController : Controller
     {
         // GET: AllProject
-        
-             private ApplicationDbContext DbContext;
+
+        private ApplicationDbContext DbContext;
         private ProjectHelper ProjectHelper;
         public AllProjectController()
         {
@@ -99,11 +99,7 @@ namespace Mvc2.Controllers
                 }
             }
             project.ProjectName = formData.ProjectName;
-
             project.DateUpdated = DateTime.Now;
-
-
-
             DbContext.SaveChanges();
 
             return RedirectToAction(nameof(HomeController.Index));
@@ -135,7 +131,7 @@ namespace Mvc2.Controllers
         public ActionResult Edit(int id, CreateProjectViewModel formData)
         {
             return SaveProject(id, formData);
-            
+
         }
         [HttpGet]
         public ActionResult FullDetail(int? id)
@@ -154,11 +150,9 @@ namespace Mvc2.Controllers
             {
                 ProjectName = project.ProjectName,
                 DateCreated = project.DateCreated,
-                
+
             };
             return View(model);
         }
-
-       
     }
 }

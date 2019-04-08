@@ -10,10 +10,13 @@ namespace Mvc2.Models.Helpers
     {
         private ApplicationDbContext DbContext;
 
+        public ApplicationUser User { get; }
+
         public ProjectHelper(ApplicationDbContext dbContext)
         {
             DbContext = dbContext;
-        }
+            User = new ApplicationUser ();
+        } 
 
         public Project GetProjectById(int id)
         {

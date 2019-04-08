@@ -13678,7 +13678,7 @@ input:focus {
 
 /* Sidebar */
 .sidebar {
-  min-height: calc(100vh - 63px);
+  
   background: #ffffff;
   font-family: "Poppins", sans-serif;
   padding: 0;
@@ -13746,7 +13746,7 @@ input:focus {
           margin-left: 1.25rem; }
       .sidebar .nav .nav-item .nav-link .menu-title {
         color: inherit;
-        display: inline-block;
+        display: inline;
         font-size: 12px;
         line-height: 1;
         vertical-align: middle; }
@@ -13996,7 +13996,7 @@ input:focus {
       .navbar.default-layout .navbar-brand-wrapper .brand-logo {
         display: none; }
       .navbar.default-layout .navbar-brand-wrapper .brand-logo-mini {
-        display: inline-block; }
+        display: inline; }
   .navbar-collapse {
     display: flex;
     margin-top: 0.5rem; } }
@@ -14389,7 +14389,7 @@ pre {
   border-style: solid;
   border-color: #ffaf00;
   border-radius: 100%;
-  display: inline-block;
+  display: inline;
   height: 8px;
   width: 8px; }
   .status-indicator.online {
@@ -14468,7 +14468,7 @@ pre {
 
 .demo-modal {
   position: static;
-  display: block; }
+   }
   .demo-modal .modal-dialog {
     margin-top: 0 !important; }
     .demo-modal .modal-dialog.modal-lg {
@@ -14615,7 +14615,7 @@ pre {
     margin-right: auto;
     height: 5px;
     width: 30px;
-    display: block;
+   
     margin-top: 5px; }
   .dashboard-bar-chart-legend .col:nth-child(1) .bg {
     background: #8862e0; }
@@ -14636,7 +14636,7 @@ pre {
   font-family: "Poppins", sans-serif;
   font-weight: 600; }
   .badge:empty {
-    display: inline-block;
+    display: inline;
     min-width: 10px;
     min-height: 10px;
     padding: 0;

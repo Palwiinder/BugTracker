@@ -1,0 +1,30 @@
+﻿@model AssignProjectViewModel
+
+<h2>AssignProjects</h2>
+
+<div class="content-wrapper">
+    <!-- View For Assigning Projects To Users but not Successfully Finished The Step Of Assigning Projects To Users -->
+    <section class="content">
+        <form action="@Url.Action("AssignProjects", "Project")" method="post">
+            @Html.ValidationSummary(false)
+
+            @if (Model.AddProjects != null && Model.AddProjects.ToList().Any())
+            {
+                <p>Add User</p>
+                <div class="form-group">
+
+                    @Html.ListBoxFor(p => p.SelectedAddProjects, Model.AddProjects)
+                </div>
+            }
+            @if (Model.RemoveProjects != null && Model.RemoveProjects.ToList().Any())
+            {
+                <p>Remove User</p>
+                <div class="form-group">
+                    @Html.ListBoxFor(p => p.SelectedRemoveProjects, Model.RemoveProjects)
+                </div>
+            }
+            <input type="hidden" name="ProjectId" value="@Model.ProjectId" />
+            <input type="submit" value="Submit!" />
+        </form>
+    </section>
+</div>

@@ -8,8 +8,8 @@ namespace Mvc2.Models.ViewModel
     public class ShowProjectViewModel
     {
         public string ProjectName { get; set; }
+        public string Tickets { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateUpdated { get; set; }
-        //public virtual ApplicationUser User { get; set; }
     }
 }
