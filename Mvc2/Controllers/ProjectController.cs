@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Mvc2.Models;
+using Mvc2.Models.Domain;
+using Mvc2.Models.Helpers;
 using Mvc2.Models.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -14,12 +16,147 @@ namespace Mvc2.Controllers
     {
         // GET: Project
 
-        //Try to Assign Project to Users In The Same Way As I Assign Roles To Users But Not Accomplish SuccessFully At This Point.
-        private ApplicationDbContext data = new ApplicationDbContext();
+        private ApplicationDbContext DbContext;
+        private ProjectHelper ProjectHelper;
+        public ProjectController()
+        {
+            DbContext = new ApplicationDbContext();
+            ProjectHelper = new ProjectHelper(DbContext);
+        }
         public ActionResult Index()
         {
-            return View(data.Users.ToList());
+            var userId = User.Identity.GetUserId();
+            var model = ProjectHelper.GetUsersProjects(userId)
+               .Select(p => new IndexProjectViewModel
+               {
+                   ProjectId = p.Projectid,
+                   ProjectName = p.ProjectName,
+                   DateCreated = p.DateCreated,
+                   DateUpdated = p.DateUpdated,
+                   Users = p.Users ?? new List<ApplicationUser>(),
+               }).ToList();
+
+            return View(model);
         }
+
+        [Authorize(Roles = "Admin,ProjectManager")]
+        public ActionResult AllProjects()
+        {
+            var model = ProjectHelper.GetAllProjects()
+               .Select(p => new IndexProjectViewModel
+               {
+                   ProjectId = p.Projectid,
+                   ProjectName = p.ProjectName,
+                   DateCreated = p.DateCreated,
+                   DateUpdated = p.DateUpdated,
+                   Users = p.Users ?? new List<ApplicationUser>(),
+               }).ToList();
+
+            return View(model);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,ProjectManager")]
+        public ActionResult CreateProject()
+        {
+            //PopulateViewBag();
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin,ProjectManager")]
+        public ActionResult CreateProject(CreateProjectViewModel formData)
+        {
+            return SaveProject(null, formData);
+        }
+
+        private ActionResult SaveProject(int? id, CreateProjectViewModel formData)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            Project project;
+            var userId = User.Identity.GetUserId();
+            if (!id.HasValue)
+            {
+                project = new Project();
+                var applicationUser = DbContext.Users.FirstOrDefault(user => user.Id == userId);
+                if (applicationUser == null)
+                {
+                    return RedirectToAction(nameof(HomeController.Index));
+                }
+                project.Users.Add(applicationUser);
+                DbContext.ProjectDatabase.Add(project);
+            }
+            else
+            {
+                project = DbContext.ProjectDatabase.FirstOrDefault(p => p.Projectid == id);
+
+                if (project == null)
+                {
+                    return RedirectToAction(nameof(HomeController.Index));
+                }
+            }
+            project.ProjectName = formData.ProjectName;
+            project.DateUpdated = DateTime.Now;
+            DbContext.SaveChanges();
+
+            return RedirectToAction(nameof(HomeController.Index));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,ProjectManager")]
+        public ActionResult Edit(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return RedirectToAction(nameof(HomeController.Index));
+            }
+
+            var project = DbContext.ProjectDatabase.FirstOrDefault(p => p.Projectid == id);
+
+            if (project == null)
+            {
+                return RedirectToAction(nameof(HomeController.Index));
+            }
+
+            var model = new CreateProjectViewModel();
+            model.ProjectName = project.ProjectName;
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin,ProjectManager")]
+        public ActionResult Edit(int id, CreateProjectViewModel formData)
+        {
+            return SaveProject(id, formData);
+
+        }
+        [HttpGet]
+        public ActionResult FullDetail(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return RedirectToAction(nameof(HomeController.Index));
+            }
+
+            var project = DbContext.ProjectDatabase.FirstOrDefault(p => p.Projectid == id);
+            if (project == null)
+            {
+                return RedirectToAction(nameof(HomeController.Index));
+            }
+            var model = new ShowProjectViewModel()
+            {
+                ProjectName = project.ProjectName,
+                DateCreated = project.DateCreated,
+
+            };
+            return View(model);
+        }
+
+
 
         public ActionResult AssignProjects(int? id)
         {
@@ -28,21 +165,20 @@ namespace Mvc2.Controllers
                 return RedirectToAction(nameof(HomeController.Index));
             }
             var model = new AssignProjectViewModel();
-            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(data));
-            var project = data.ProjectDatabase.FirstOrDefault(p => p.Projectid == id);
-            var users = data.Users.ToList();
-            var UsersAssigned = project.Users.Select(p => p.Id).ToList();
+            var project = DbContext.ProjectDatabase.FirstOrDefault(p => p.Projectid == id);
+            var users = DbContext.Users.ToList();
+            var UsersAssigned = project.Users.ToList();
 
-            var a = new HashSet<string>(UsersAssigned);
+            var usersToAdd = new HashSet<ApplicationUser>(UsersAssigned);
 
             foreach (var user in UsersAssigned)
             {
-                if (project.ProjectName.Contains(user))
+                if (project.Users.Contains(user))
                 {
-                    a.Remove(user);
+                    usersToAdd.Remove(user);
                 }
             }
-            model.AddProjects = new MultiSelectList(users, "ProjectId", UsersAssigned);
+            model.AddUsers = new MultiSelectList(users, "Id", "Email", UsersAssigned);
 
             return View(model);
         }
@@ -50,22 +186,32 @@ namespace Mvc2.Controllers
 
         public ActionResult AssignProjects(AssignProjectViewModel model)
         {
-            var project = data.ProjectDatabase.FirstOrDefault(p => p.Projectid == model.ProjectId);
-            var projects = project.Users.ToList();
-            foreach(var user in projects)
+            var project = DbContext.ProjectDatabase.FirstOrDefault(p => p.Projectid == model.ProjectId);
+            if (project == null)
             {
-                project.Users.Remove(user);
-        }
-        if(model.SelectedAddProjects != null)
+                return RedirectToAction(nameof(UserController.Index));
+            }
+
+            if (model.SelectedRemoveUsers != null)
             {
-                foreach(var userId in model.SelectedAddProjects)
+                foreach (var userId in model.SelectedRemoveUsers)
                 {
-                    var user = data.Users.FirstOrDefault(p => p.Id == userId);
+                    var user = DbContext.Users.FirstOrDefault(p => p.Id == userId);
+                    project.Users.Remove(user);
+                }
+            }
+
+            if (model.SelectedAddUsers != null)
+            {
+                foreach (var userId in model.SelectedAddUsers)
+                {
+                    var user = DbContext.Users.FirstOrDefault(p => p.Id == userId);
                     project.Users.Add(user);
                 }
             }
-            data.SaveChanges();
+
+            DbContext.SaveChanges();
             return RedirectToAction("Index");
-            }
+        }
     }
 }

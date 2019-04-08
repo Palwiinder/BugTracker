@@ -8,19 +8,19 @@
         <form action="@Url.Action("AssignProjects", "Project")" method="post">
             @Html.ValidationSummary(false)
 
-            @if (Model.AddProjects != null && Model.AddProjects.ToList().Any())
+            @if (Model.AddUsers != null && Model.AddUsers.ToList().Any())
             {
                 <p>Add User</p>
                 <div class="form-group">
 
-                    @Html.ListBoxFor(p => p.SelectedAddProjects, Model.AddProjects)
+                    @Html.ListBoxFor(p => p.SelectedAddUsers, Model.AddUsers)
                 </div>
             }
-            @if (Model.RemoveProjects != null && Model.RemoveProjects.ToList().Any())
+            @if (Model.RemoveUsers != null && Model.RemoveUsers.ToList().Any())
             {
                 <p>Remove User</p>
                 <div class="form-group">
-                    @Html.ListBoxFor(p => p.SelectedRemoveProjects, Model.RemoveProjects)
+                    @Html.ListBoxFor(p => p.SelectedRemoveUsers, Model.RemoveUsers)
                 </div>
             }
             <input type="hidden" name="ProjectId" value="@Model.ProjectId" />
