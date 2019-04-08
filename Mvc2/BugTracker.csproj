@@ -174,7 +174,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\AllProjectController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
@@ -2246,18 +2245,17 @@
     <Content Include="Template\vendors\tinymce\skins\lightgray\fonts\tinymce.eot" />
     <Content Include="Template\vendors\tinymce\skins\lightgray\fonts\tinymce.ttf" />
     <Content Include="Template\vendors\tinymce\skins\lightgray\fonts\tinymce.woff" />
-    <Content Include="Views\AllProject\CreateProject.cshtml" />
+    <Content Include="Views\Project\CreateProject.cshtml" />
     <Content Include="Views\Manage\Edit.cshtml" />
-    <Content Include="Views\AllProject\Edit.cshtml" />
+    <Content Include="Views\Project\Edit.cshtml" />
     <Content Include="Views\User\AssignRole.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
-    <Content Include="Views\AllProject\AllProjects.cshtml" />
-    <Content Include="Views\AllProject\UserProject.cshtml" />
-    <Content Include="Views\AllProject\Index.cshtml" />
-    <Content Include="Views\Home\ShowProject.cshtml" />
-    <Content Include="Views\AllProject\FullDetail.cshtml" />
-    <Content Include="Views\Project\AssignProjects.cshtml" />
+    <Content Include="Views\Project\AllProjects.cshtml" />
+    <Content Include="Views\Project\UserProject.cshtml" />
     <Content Include="Views\Project\Index.cshtml" />
+    <Content Include="Views\Home\ShowProject.cshtml" />
+    <Content Include="Views\Project\FullDetail.cshtml" />
+    <Content Include="Views\Project\AssignProjects.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

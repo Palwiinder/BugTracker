@@ -21,7 +21,7 @@
 </head>
 
 <body>
-    <div class="container-scroller">
+    <div class="container-scroller" style="margin-bottom: 75px;">
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
@@ -90,60 +90,63 @@
         </button>
     </div>
     <!-- partial -->
-    <div>
-        <!-- partial:partials/_sidebar.html -->
-        <nav class="sidebar style = " Display:inline;>
-            <ul class="nav">
-                <li class="nav-item nav-profile">
-                    <div class="nav-link">
-                        <div class="user-wrapper">
-                            <div class="profile-image">
-                                <img src="~/Template/images/faces/face1.jpg" alt="profile image">
-                            </div>
-                            <div class="text-wrapper">
-                                <p class="profile-name">Richard V.Welsh</p>
-                                <div>
-                                    <small class="designation text-muted">Manager</small>
-                                    <span class="status-indicator online"></span>
+    <div style="display: flex; flex-flow: row;">
+        <div class="col-lg-4" style="width: 50%">
+            <!-- partial:partials/_sidebar.html -->
+            <nav class="sidebar" style=" display:inline;">
+                <ul class="nav">
+                    <li class="nav-item nav-profile">
+                        <div class="nav-link">
+                            <div class="user-wrapper">
+                                <div class="profile-image">
+                                    <img src="~/Template/images/faces/face1.jpg" alt="profile image">
+                                </div>
+                                <div class="text-wrapper">
+                                    <p class="profile-name">Richard V.Welsh</p>
+                                    <div>
+                                        <small class="designation text-muted">Manager</small>
+                                        <span class="status-indicator online"></span>
+                                    </div>
                                 </div>
                             </div>
+                            @*@Html.ActionLink("CreateProject", "CreateProject", "AllProject", new { @class = "nav-link" })*@
+
+                            <a class="btn btn-success btn-block" href="@Url.Action("CreateProject", "Project")">
+                                New Project
+
+                                <i class="mdi mdi-plus"></i>
+                            </a>
                         </div>
-                        @*@Html.ActionLink("CreateProject", "CreateProject", "AllProject", new { @class = "nav-link" })*@
+                    </li>
+                    <li class="nav-item">
+                        @*@Html.ActionLink("Dashboard", "Index", "Home", new { @class = "nav-link" })*@
 
-                        <a class="btn btn-success btn-block" href="@Url.Action("CreateProject", "AllProject")">
-                            New Project
-
-                            <i class="mdi mdi-plus"></i>
+                        <a class="nav-link" href="@Url.Action("Index","Home")">
+                            <i class="menu-icon mdi mdi-television"></i>
+                            <span class="menu-title">Dashboard</span>
                         </a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    @*@Html.ActionLink("Dashboard", "Index", "Home", new { @class = "nav-link" })*@
+                    </li>
 
-                    <a class="nav-link" href="@Url.Action("Index","Home")">
-                        <i class="menu-icon mdi mdi-television"></i>
-                        <span class="menu-title">Dashboard</span>
-                    </a>
-                </li>
+                    <li class="nav-item">
+                        @*@Html.ActionLink("MyProjects", "Projects", "AllProject", new { @class = "nav-link" })*@
+                        <a class="nav-link" href="@Url.Action("Index","Project")">
+                            <i class="menu-icon mdi mdi-chart-line"></i>
+                            <span class="menu-title">My Projects</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("AllProjects","Project")">
+                            <i class="menu-icon mdi mdi-table"></i>
+                            <span class="menu-title">All Projects</span>
+                        </a>
+                    </li>
+                </ul>
 
-                <li class="nav-item">
-                    @*@Html.ActionLink("MyProjects", "Projects", "AllProject", new { @class = "nav-link" })*@
-                    <a class="nav-link" href="@Url.Action("Index","AllProject")">
-                        <i class="menu-icon mdi mdi-chart-line"></i>
-                        <span class="menu-title">My Projects</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="@Url.Action("AllProjects","AllProject")">
-                        <i class="menu-icon mdi mdi-table"></i>
-                        <span class="menu-title">All Projects</span>
-                    </a>
-                </li>
-            </ul>
+            </nav>
+        </div>
 
-        </nav>
+        <div class="col-lg-8"> @RenderBody()</div>
     </div>
-    @RenderBody()
     @*@Html.Partial("_LoginPartial")*@
 
     <footer class="footer">
