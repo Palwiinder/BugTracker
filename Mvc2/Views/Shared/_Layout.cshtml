@@ -17,6 +17,14 @@
     <link rel="stylesheet" href="~/Template/css/style.css">
     <!-- endinject -->
     <link rel="shortcut icon" href="~/Template/images/favicon.png" />
+    <style>
+        .nav-link {
+            padding: 5px !important;
+        }
+        .nav-item {
+            width: 100%;
+        }
+    </style>
     @RenderSection("css", false)
 </head>
 
@@ -90,8 +98,9 @@
         </button>
     </div>
     <!-- partial -->
-    <div style="display: flex; flex-flow: row;">
-        <div class="col-lg-4" style="width: 50%">
+    <div style="display: flex; flex-flow: row; justify-content: flex-start">
+        <div class="col-lg-4" style= "margin-right: 47px;
+    flex-basis: 100px;">
             <!-- partial:partials/_sidebar.html -->
             <nav class="sidebar" style=" display:inline;">
                 <ul class="nav">
@@ -111,7 +120,7 @@
                             </div>
                             @*@Html.ActionLink("CreateProject", "CreateProject", "AllProject", new { @class = "nav-link" })*@
 
-                            <a class="btn btn-success btn-block" href="@Url.Action("CreateProject", "Project")">
+                            <a class="btn btn-success" href="@Url.Action("CreateProject", "Project")">
                                 New Project
 
                                 <i class="mdi mdi-plus"></i>

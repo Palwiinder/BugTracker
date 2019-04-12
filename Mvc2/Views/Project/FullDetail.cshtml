@@ -4,3 +4,11 @@
 <p>@Model.DateUpdated</p>
 <p>@Model.DateCreated</p>
 
+        @foreach (var record in Model.Users)
+        {
+            <p>@record.UserName</p>
+        }
+
+        
+    
+

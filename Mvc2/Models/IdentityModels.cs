@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -13,9 +14,18 @@ namespace Mvc2.Models
     {
         public virtual List<Project> Projects { get; set; }
         public virtual string DisplayName { get; set; }
+
+        [InverseProperty(nameof(Ticket.CreatedBy))]
+        public virtual List<Ticket> CreatedTickets { get; set; }
+
+        [InverseProperty(nameof(Ticket.AssignedTo))] 
+        public virtual List<Ticket> AssignedTickets { get; set; }
         public ApplicationUser()
         {
             Projects= new List<Project>();
+            CreatedTickets = new List<Ticket>();
+            AssignedTickets = new List<Ticket>();
+
         }
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
@@ -33,6 +43,10 @@ namespace Mvc2.Models
         {
         }
         public DbSet<Project> ProjectDatabase { get; set; }
+        public DbSet<Ticket> TicketsDatabase { get; set; }
+        public DbSet<TicketType> TicketsTypeDatabase { get; set; }
+        public DbSet<TicketPriority> TicketsPriorityDatabase { get; set; }
+        public DbSet<TicketStatus> TicketsStatusDatabase { get; set; }
 
 
         public static ApplicationDbContext Create()

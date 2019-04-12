@@ -57,7 +57,8 @@
 
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.ProjectId }) |
-                    @Html.ActionLink("Details", "FullDetail", new { id = item.ProjectId })
+                    @Html.ActionLink("Details", "FullDetail", new { id = item.ProjectId })|
+                    @Html.ActionLink("Mange Users", "AssignProjects", new { ProjectId = item.ProjectId })
                 </td>
             </tr>
         }

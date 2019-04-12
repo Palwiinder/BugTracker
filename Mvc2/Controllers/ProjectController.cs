@@ -151,6 +151,8 @@ namespace Mvc2.Controllers
             {
                 ProjectName = project.ProjectName,
                 DateCreated = project.DateCreated,
+                Users = project.Users
+
 
             };
             return View(model);
@@ -158,14 +160,15 @@ namespace Mvc2.Controllers
 
 
 
-        public ActionResult AssignProjects(int? id)
+        public ActionResult AssignProjects(int? ProjectId)
         {
-            if (!id.HasValue)
+            if (!ProjectId.HasValue)
             {
                 return RedirectToAction(nameof(HomeController.Index));
             }
             var model = new AssignProjectViewModel();
-            var project = DbContext.ProjectDatabase.FirstOrDefault(p => p.Projectid == id);
+            var project = DbContext.ProjectDatabase.FirstOrDefault(p => p.Projectid == ProjectId);
+            model.ProjectId = project.Projectid;
             var users = DbContext.Users.ToList();
             var UsersAssigned = project.Users.ToList();
 
