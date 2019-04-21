@@ -18,12 +18,15 @@ namespace Mvc2.Models.Domain
             DateCreated = DateTime.Now;
             Comments = new List<TicketComment>();
             Attachments = new List<TicketAttachments>();
+            Project = new Project();
         }
 
-        public virtual Project Project { get; set; }
+        public Project Project { get; set; }
         public int ProjectId { get; set; }
         public virtual TicketType TicketType { get; set; }
         public int TicketTypeId { get; set; }
+        public string MediaUrl { get; set; }
+
         public virtual TicketPriority TicketPriority { get; set; }
         public int TicketPriorityId { get; set; }
         public virtual TicketStatus TicketStatus { get; set; }

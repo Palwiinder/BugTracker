@@ -47,9 +47,14 @@
                     <td>
                         @Html.ActionLink("Edit", "Edit", new { id = record.ProjectId }) |
                         @Html.ActionLink("Details", "FullDetail", new { id = record.ProjectId })
-                        @Html.ActionLink("CreateTicket", "CreateTicket", new { controller = "Tickets", id = record.ProjectId }, new { })
-                    @*<a class="menu-title btn btn-info" href="@Url.Action("Edit", "Tickets", new{id = record.)">Users Page</a>*@
-                    </td>
+                        
+                        @if (User.IsInRole("Submitter"))
+                        {
+
+                            @Html.ActionLink("CreateTicket", "CreateTicket", new { controller = "Tickets", id = record.ProjectId }@*, new { }*@)
+                        }
+                            @*<a class="menu-title btn btn-info" href="@Url.Action("Edit", "Tickets", new{id = record.)">Users Page</a>*@
+                        </td>
                </tr>
             }
 

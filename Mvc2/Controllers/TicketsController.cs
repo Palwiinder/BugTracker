@@ -28,7 +28,6 @@ namespace Mvc2.Controllers
 
         }
 
-
         public ActionResult Tickets()
         {
             var userId = User.Identity.GetUserId();
@@ -67,6 +66,7 @@ namespace Mvc2.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Submitter")]
         public ActionResult CreateTicket(int? id)
         {
             if (!id.HasValue)
@@ -101,12 +101,12 @@ namespace Mvc2.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Submitter")]
         public ActionResult CreateTicket(CreateTicketViewModel formData)
         {
             return SaveTicket(null, formData);
         }
 
-        [NonAction]
         private ActionResult SaveTicket(int? id, CreateTicketViewModel formData)
         {
             if (!ModelState.IsValid)
@@ -114,22 +114,6 @@ namespace Mvc2.Controllers
                 return View();
             }
 
-            //var ticketType = DbContext.TicketsTypeDatabase.ToList();
-            //var ticketPriority = DbContext.TicketsPriorityDatabase.ToList();
-
-            //formData.TicketType = ticketType.Select(p => new SelectListItem()
-            //{
-            //    Text = p.Name,
-            //    Value = p.Id.ToString(),
-            //}).ToList();
-
-            //formData.TicketPriority = ticketPriority.Select(p => new SelectListItem()
-            //{
-            //    Text = p.Name,
-            //    Value = p.Id.ToString(),
-            //}).ToList();
-
-            //return View(formData);
             string fileExtension;
 
             //Validating file upload
@@ -144,6 +128,7 @@ namespace Mvc2.Controllers
                     return RedirectToAction(nameof(Tickets));
                 }
             }
+
             Ticket ticket;
             var userId = User.Identity.GetUserId();
             if (!id.HasValue)
@@ -183,26 +168,26 @@ namespace Mvc2.Controllers
                 var fullPathWithName = Constants.MappedUploadFolder + fileName;
 
                 formData.Media.SaveAs(fullPathWithName);
-                var a = DbContext.TicketsAttachmentsDatabase.FirstOrDefault(p => p.TicketId == ticket.Id);
-                TicketAttachments att;
-                if (a == null)
+                var media = DbContext.TicketsAttachmentsDatabase.FirstOrDefault(p => p.TicketId == ticket.Id);
+                TicketAttachments attachment;
+                if (media == null)
                 {
-                    att = new TicketAttachments()
+                    attachment = new TicketAttachments()
                     {
                         MediaUrl = Constants.UploadFolder + fileName,
                         TicketId = ticket.Id,
                         UserId = ticket.CreatedById,
 
                     };
-                    DbContext.TicketsAttachmentsDatabase.Add(att);
-                    ticket.Attachments.Add(att);
+                    DbContext.TicketsAttachmentsDatabase.Add(attachment);
+                    ticket.Attachments.Add(attachment);
                 }
             }
-            var tp = DbContext.TicketsPriorityDatabase.FirstOrDefault(p => p.Id == formData.PriorityId);
+            var ticketPriority = DbContext.TicketsPriorityDatabase.FirstOrDefault(p => p.Id == formData.PriorityId);
             var type = DbContext.TicketsTypeDatabase.FirstOrDefault(p => p.Id == formData.TypeId);
             ticket.Title = formData.Title;
 
-            ticket.TicketPriorityId = tp.Id;
+            ticket.TicketPriorityId = ticketPriority.Id;
             ticket.TicketTypeId = type.Id;
             DbContext.SaveChanges();
             return RedirectToAction(nameof(TicketsController.Tickets));
@@ -240,6 +225,8 @@ namespace Mvc2.Controllers
             {
                 Title = ticket.Title,
                 Description = ticket.Description,
+                AssignedTo = ticket.AssignedTo,
+                MediaUrl = ticket.MediaUrl,
                 TicketType = ticketType.Select(p => new SelectListItem()
                 {
                     Text = p.Name,
@@ -256,6 +243,8 @@ namespace Mvc2.Controllers
                     Value = p.Id.ToString(),
                 }).ToList(),
                 ProjectId = id.Value,
+                
+
                 //Users = p.Users ?? new List<ApplicationUser>(),
             };
 
@@ -283,19 +272,25 @@ namespace Mvc2.Controllers
             {
                 return RedirectToAction(nameof(TicketsController.Tickets));
             }
+
+
             var model = new ViewTicketViewModel()
             {
                 Title = ticket.Title,
                 Description = ticket.Description,
                 Id = ticket.Id,
                 Comments = ticket.Comments,
+                Attachments = ticket.Attachments.ToList(),
                 CreatedBy = DbContext.Users.FirstOrDefault(p => p.Id == ticket.CreatedById),
-                AssignedTo = ticket.AssignedTo,
+                Project = ticket.Project.ProjectName,
+                AssignedTo = DbContext.Users.FirstOrDefault(p => p.Id == ticket.AssignedToId),
                 Type = DbContext.TicketsTypeDatabase.First(p => p.Id == ticket.TicketTypeId).Name,
                 Status = DbContext.TicketsStatusDatabase.First(p => p.Id == ticket.TicketStatusId).Name,
                 Priority = DbContext.TicketsPriorityDatabase.First(p => p.Id == ticket.TicketPriorityId).Name,
                 DateCreated = ticket.DateCreated,
                 DateUpdated = ticket.DateUpdated,
+               
+                
             };
             return View(model);
         }
@@ -419,7 +414,7 @@ namespace Mvc2.Controllers
 
         public ActionResult AssignTickets(int? TicketId)
         {
-            
+
             if (!TicketId.HasValue)
             {
                 return RedirectToAction(nameof(TicketsController.Tickets));
@@ -429,10 +424,10 @@ namespace Mvc2.Controllers
             var ticket = DbContext.TicketsDatabase.FirstOrDefault(p => p.Id == TicketId);
             model.TicketId = ticket.Id;
             var users = DbContext.Users.ToList();
-            var devRoleId = roleManager.Roles.First(role => role.Name == "developer").Id;
-            var devs = DbContext.Users.Where(user => user.Roles.Any(role => role.RoleId == devRoleId)).ToList();
+            var developerRoleId = roleManager.Roles.First(role => role.Name == "developer").Id;
+            var developer = DbContext.Users.Where(user => user.Roles.Any(role => role.RoleId == developerRoleId)).ToList();
 
-            model.AddUsers = new SelectList(devs, "Id", "Email");
+            model.AddUsers = new SelectList(developer, "Id", "Email");
 
             return View(model);
         }

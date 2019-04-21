@@ -14,5 +14,12 @@ namespace Mvc2.Models.ViewModel
         public string Priority { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateUpdated { get; set; }
+
+        public virtual ApplicationUser CreatedBy { get; set; }
+        public string CreatedById { get; set; }
+
+        public virtual ApplicationUser AssignedTo { get; set; }
+        public string AssignedToId { get; set; }
+
     }
 }

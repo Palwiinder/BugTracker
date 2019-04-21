@@ -6,7 +6,6 @@ using System.Web.Mvc;
 
 namespace Mvc2.Models.ViewModel
 {
-    // View Model For Assigning Projects To Users
     public class AssignProjectViewModel
     {
         public int ProjectId { get; set; }

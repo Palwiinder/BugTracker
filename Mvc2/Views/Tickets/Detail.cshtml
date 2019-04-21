@@ -33,7 +33,6 @@ else
                 <th>@nameof(Model.Status)</th>
                 <th>@nameof(Model.Priority)</th>
                 <th>@nameof(Model.CreatedBy.UserName)</th>
-                <th>@nameof(Model.AssignedTo.UserName)</th>
                 <th>@nameof(Model.DateCreated)</th>
                 <th>@nameof(Model.DateUpdated)</th>
 
@@ -50,36 +49,49 @@ else
                 <td>@Model.CreatedBy.UserName</td>
                 <td>@Model.DateCreated</td>
                 <td>@Model.DateUpdated</td>
-                
-                </tr>
+
+            </tr>
 
 
-            </tbody>
-        </table>
+        </tbody>
+    </table>
+}
+<td>@Model.Project</td>
+@if (@Model.AssignedTo != null)
+{
+    <span>Assigned User : </span>
+    <span>@Model.AssignedTo.UserName</span>
+}
+@if (Model.Attachments == null) 
+{
+    <h5>No Attachement</h5>
+}
+else
+{
+    <h5 style="margin-top:15px;">Attachments : </h5>
+    <div class="row">
+        <div class="col-md-2" style="margin-bottom : 12px; margin-top:10px;">
+            @Model.Attachments
+        </div>
+    </div>
+
+}
+<div>
+        <h4>Comments</h4>
+    @foreach (var record in Model.Comments)
+    {
+        <p style="margin-bottom:-0px">@record.Comment</p>
+
+        <p>@Html.ActionLink("Edit", "EditComment", new { id = record.Id }) </p>
+        <form method="post" action="@Url.Action("Delete", "Tickets",new { id = record.Id })"><button class="small xs" style="margin-bottom:15px">Delete</button> </form>
     }
-    <p>@Model.AssignedTo.UserName</p>
-                    <div>
-                        @foreach (var record in Model.Comments)
-                        {
+</div>
 
-                            <p>@record.Comment</p>
-
-                            <p>@Html.ActionLink("Edit", "EditComment", new { id = record.Id }) |</p>
-                            <form method="post" action="@Url.Action("Delete", "Tickets",new { id = record.Id })"><button class="btn btn-default">Delete</button> </form>
-
-                            @*<td>
-                                    @Html.ActionLink("Edit", "Edit", new { id = record.ProjectId }) |
-                                    @Html.ActionLink("Details", "FullDetail", new { id = record.ProjectId })
-                                    @Html.ActionLink("CreateTicket", "CreateTicket", new { controller = "Tickets", id = record.ProjectId }, new { })
-
-                                </td>*@
-                        }
-                    </div>
-
-                    <form action="@Url.Action("CreateComment","Tickets", new { TicketId = Model.Id })" method="post">
-                        <div class="form-group">
-                            <textarea name="Comment"></textarea>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
+<form action="@Url.Action("CreateComment","Tickets", new { TicketId = Model.Id })" method="post">
+    <div class="form-group">
+        <h4>Comment</h4>
+        <textarea name="Comment" placeholder="Leave a comment"></textarea>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
 

@@ -9,5 +9,7 @@ namespace Mvc2.Models.Domain
     {
         public int Id { get; set; }
         public string Name { get; set; }
+
+        public virtual List<Ticket> Tickets { get; set; }
     }
 }
