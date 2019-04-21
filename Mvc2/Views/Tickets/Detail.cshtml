@@ -1,0 +1,85 @@
+﻿@model ViewTicketViewModel
+
+@section css {
+    <link rel="stylesheet"
+          href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+}
+
+@section Scripts {
+    <script type="text/javascript"
+            src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js">
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#sample-datatables').DataTable();
+        });
+    </script>
+}
+
+@if (Model == null)
+{
+    <div style="margin-top:15px;">
+        <p><strong>No Comments Available </strong></p>
+    </div>
+}
+else
+{
+    <table id="sample-datatables" class="table table-striped">
+        <thead>
+            <tr>
+                <th>@nameof(Model.Title)</th>
+                <th>@nameof(Model.Description)</th>
+                <th>@nameof(Model.Type)</th>
+                <th>@nameof(Model.Status)</th>
+                <th>@nameof(Model.Priority)</th>
+                <th>@nameof(Model.CreatedBy.UserName)</th>
+                <th>@nameof(Model.AssignedTo.UserName)</th>
+                <th>@nameof(Model.DateCreated)</th>
+                <th>@nameof(Model.DateUpdated)</th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>@Model.Title</td>
+                <td>@Model.Description</td>
+                <td>@Model.Type</td>
+                <td>@Model.Status</td>
+                <td>@Model.Priority</td>
+                <td>@Model.CreatedBy.UserName</td>
+                <td>@Model.DateCreated</td>
+                <td>@Model.DateUpdated</td>
+                
+                </tr>
+
+
+            </tbody>
+        </table>
+    }
+    <p>@Model.AssignedTo.UserName</p>
+                    <div>
+                        @foreach (var record in Model.Comments)
+                        {
+
+                            <p>@record.Comment</p>
+
+                            <p>@Html.ActionLink("Edit", "EditComment", new { id = record.Id }) |</p>
+                            <form method="post" action="@Url.Action("Delete", "Tickets",new { id = record.Id })"><button class="btn btn-default">Delete</button> </form>
+
+                            @*<td>
+                                    @Html.ActionLink("Edit", "Edit", new { id = record.ProjectId }) |
+                                    @Html.ActionLink("Details", "FullDetail", new { id = record.ProjectId })
+                                    @Html.ActionLink("CreateTicket", "CreateTicket", new { controller = "Tickets", id = record.ProjectId }, new { })
+
+                                </td>*@
+                        }
+                    </div>
+
+                    <form action="@Url.Action("CreateComment","Tickets", new { TicketId = Model.Id })" method="post">
+                        <div class="form-group">
+                            <textarea name="Comment"></textarea>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+

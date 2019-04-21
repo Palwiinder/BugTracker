@@ -4,7 +4,7 @@
 }
 
 <h2>CreateTicket</h2>
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     @Html.ValidationSummary(false)
 
     <div class="form-group">
@@ -26,6 +26,10 @@
     </div>
     <div class="form-group">
         @Html.DropDownListFor(p => p.PriorityId, Model.TicketPriority)
+    </div>
+    <div class="form-group">
+        
+        <input type="file" name="Media" />
     </div>
     @Html.HiddenFor(p => p.ProjectId)
     <div class="">

@@ -1,0 +1,32 @@
+﻿@model CreateTicketViewModel
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+<form method="post">
+    @Html.ValidationSummary(false)
+
+    <div class="form-group">
+        @Html.LabelFor(p => p.Title, "Ticket Title:")
+        @Html.TextBoxFor(p => p.Title, new { @class = "form-control", placeholder = "Ticket Title" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(p => p.Description, "Ticket Description:")
+        @Html.TextAreaFor(p => p.Description, new { @class = "form-control", placeholder = "Ticket Description" })
+    </div>
+    <div class="form-group">
+        @Html.DropDownListFor(p => p.PriorityId, Model.TicketPriority)
+    </div>
+    <div class="form-group">
+        @Html.DropDownListFor(p => p.StatusId, Model.TicketStatus)
+    </div>
+    <div class="form-group">
+        @Html.DropDownListFor(p => p.TypeId, Model.TicketType)
+    </div>
+
+    <div class="">
+        <button type="submit" class="btn btn-default">Submit</button>
+    </div>
+</form>

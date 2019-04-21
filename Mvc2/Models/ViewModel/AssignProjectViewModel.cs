@@ -10,7 +10,6 @@ namespace Mvc2.Models.ViewModel
     public class AssignProjectViewModel
     {
         public int ProjectId { get; set; }
-        public string Tickets { get; set; }
         public MultiSelectList AddUsers { get; set; }
         public MultiSelectList RemoveUsers { get; set; }
         public string[] SelectedAddUsers { get; set; } = new string[] { };

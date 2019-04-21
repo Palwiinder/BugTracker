@@ -1,0 +1,30 @@
+﻿@model AssignTicketsViewModel
+@{
+    ViewBag.Title = "AssignTickets";
+}
+<div class="content-wrapper">
+
+    <section class="content">
+        <form action="@Url.Action("AssignTickets", "Tickets")" method="post">
+            @Html.ValidationSummary(false)
+
+            @if (Model.AddUsers != null && Model.AddUsers.Any())
+            {
+                <p>Add User</p>
+                <div class="form-group">
+
+                    @Html.DropDownListFor(p => p.SelectedAddUsers, Model.AddUsers)
+                </div>
+            }
+            @if (Model.RemoveUsers != null && Model.RemoveUsers.Any())
+            {
+                <p>Remove User</p>
+                <div class="form-group">
+                    @Html.DropDownListFor(p => p.SelectedRemoveUsers, Model.RemoveUsers)
+                </div>
+            }
+            <input type="hidden" name="TicketId" value="@Model.TicketId" />
+            <input type="submit" value="Submit!" />
+        </form>
+    </section>
+</div>

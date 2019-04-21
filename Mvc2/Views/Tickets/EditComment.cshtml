@@ -1,0 +1,19 @@
+﻿@model CreateCommentViewModel
+@{
+    ViewBag.Title = "EditComment";
+}
+
+<form method="post">
+    @Html.ValidationSummary(false)
+
+    <div class="form-group">
+        @Html.LabelFor(p => p.Comment," Comment:")
+        @Html.TextAreaFor(p => p.Comment, new { @class = "form-control", placeholder = "Leave a comment" })
+    </div>
+
+    <div class="">
+        <button type="submit" class="btn btn-default">Submit</button>
+    </div>
+
+</form>
+

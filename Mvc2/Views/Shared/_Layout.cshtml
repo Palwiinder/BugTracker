@@ -149,6 +149,19 @@
                             <span class="menu-title">All Projects</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        @*@Html.ActionLink("MyProjects", "Projects", "AllProject", new { @class = "nav-link" })*@
+                        <a class="nav-link" href="@Url.Action("Tickets","Tickets")">
+                            <i class="menu-icon mdi mdi-chart-line"></i>
+                            <span class="menu-title">My Tickets</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("AllTickets","Tickets")">
+                            <i class="menu-icon mdi mdi-table"></i>
+                            <span class="menu-title">All Tickets</span>
+                        </a>
+                    </li>
                 </ul>
 
             </nav>
@@ -169,7 +182,7 @@
     </footer>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+9    @RenderSection("scripts", required: false)
 </body>
 <!-- partial -->
 </html>

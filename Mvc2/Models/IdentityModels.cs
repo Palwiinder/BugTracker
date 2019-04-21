@@ -18,11 +18,11 @@ namespace Mvc2.Models
         [InverseProperty(nameof(Ticket.CreatedBy))]
         public virtual List<Ticket> CreatedTickets { get; set; }
 
-        [InverseProperty(nameof(Ticket.AssignedTo))] 
+        [InverseProperty(nameof(Ticket.AssignedTo))]
         public virtual List<Ticket> AssignedTickets { get; set; }
         public ApplicationUser()
         {
-            Projects= new List<Project>();
+            Projects = new List<Project>();
             CreatedTickets = new List<Ticket>();
             AssignedTickets = new List<Ticket>();
 
@@ -47,6 +47,8 @@ namespace Mvc2.Models
         public DbSet<TicketType> TicketsTypeDatabase { get; set; }
         public DbSet<TicketPriority> TicketsPriorityDatabase { get; set; }
         public DbSet<TicketStatus> TicketsStatusDatabase { get; set; }
+        public DbSet<TicketAttachments> TicketsAttachmentsDatabase { get; set; }
+        public DbSet<TicketComment> TicketsCommentsDatabase { get; set; }
 
 
         public static ApplicationDbContext Create()

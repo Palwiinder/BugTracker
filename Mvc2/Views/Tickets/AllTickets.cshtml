@@ -1,0 +1,82 @@
+﻿@model IEnumerable<Mvc2.Models.ViewModel.TicketsViewModel>
+
+@{
+    ViewBag.Title = "AllTickets";
+}
+
+@section css {
+    <link rel="stylesheet"
+          href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+}
+
+@section Scripts {
+    <script type="text/javascript"
+            src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js">
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#sample-datatables').DataTable();
+        });
+    </script>
+}
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table id="sample-datatables" class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Priority)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateCreated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateUpdated)
+            </th>
+            <th></th>
+        </tr>
+
+    </thead>
+    <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Priority)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateCreated)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateUpdated)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Tickets", new { id = item.TicketId }) |
+                        @Html.ActionLink("Detail", "Detail", new { id = item.TicketId }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.TicketId })
+                        @Html.ActionLink("Mange Users", "AssignTickets", new { TicketId = item.TicketId })
+                    </td>
+                </tr>
+            }
+    </tbody>
+</table>

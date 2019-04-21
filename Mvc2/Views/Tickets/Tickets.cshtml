@@ -21,7 +21,8 @@
     </script>
 }
 
-    <a href="@Url.Action("CreateTicket", "Tickets")">Create New</a>
+
+
 @if (!Model.Any())
 {
     <div style="margin-top:15px;">
@@ -29,7 +30,7 @@
     </div>
 }
 else
-{ 
+{
 
     <table id="sample-datatables" class="table table-striped">
         <thead>
@@ -54,15 +55,15 @@ else
                     <td>@record.DateCreated</td>
                     <td>@record.DateUpdated</td>
                     <td>
-                        
-                        @Html.ActionLink("Edit", "Edit", new { id = record.Id}) |
-                        @Html.ActionLink("Details", "FullDetail", new { id = record.Id })
-                        
+
+                        @Html.ActionLink("Edit", "Edit", new { id = record.TicketId }) |
+                        @Html.ActionLink("Details", "Detail", new { id = record.TicketId })
+
                     </td>
                 </tr>
             }
 
-            
+
         </tbody>
     </table>
 }

@@ -21,5 +21,19 @@ namespace Mvc2.Models.ViewModel
         public int StatusId { get; set; }
         public List<SelectListItem> TicketStatus { get; set; }
         public int ProjectId { get; set; }
+        public string UserName { get; set; }
+        
+        public int Id { get; set; }
+        public string TicketDescription { get; set; }
+        public DateTime DateCreated { get; set; }
+        public HttpPostedFileBase Media { get; set; }
+        public string MediaUrl { get; set; }
+
+        public Ticket Ticket { get; set; }
+        public int TicketId { get; set; }
+
+        public ApplicationUser User { get; set; }
+        public string UserId { get; set; }
+
     }
 }
