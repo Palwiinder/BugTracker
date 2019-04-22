@@ -27,7 +27,7 @@ namespace Mvc2.Models.ViewModel
         public List<TicketComment> Comments { get; set; }
         public List<TicketAttachments> Attachments { get; set; }
 
-        public string ProjectName { get; set; }
+        
         public string Project { get; set; }
         public List<Ticket> Ticket { get; set; }
     }

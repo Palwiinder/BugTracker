@@ -12,6 +12,7 @@ namespace Mvc2.Models.ViewModel
         public string Description { get; set; }
         public string Type { get; set; }
         public string Priority { get; set; }
+        public string Project { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateUpdated { get; set; }
 

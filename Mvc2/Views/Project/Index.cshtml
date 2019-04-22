@@ -18,13 +18,13 @@
 <h2>My Projects</h2>
 @if (!Model.Any())
 {
-<div style="margin-top:15px;">
-    <p><strong>No Projects Available </strong></p>
-</div>
-    }
-    else
-    {
-    <table id = "sample-datatables" class="table table-striped">
+    <div style="margin-top:15px;">
+        <p><strong>No Projects Available </strong></p>
+    </div>
+}
+else
+{
+    <table id="sample-datatables" class="table table-striped">
         <thead>
             <tr>
                 <th>Name</th>
@@ -37,7 +37,7 @@
         </thead>
         <tbody>
             @foreach (var record in Model)
-{
+            {
                 <tr>
                     <td> @record.ProjectName </td>
                     <td> @record.Users.Count() </td>
@@ -47,18 +47,18 @@
                     <td>
                         @Html.ActionLink("Edit", "Edit", new { id = record.ProjectId }) |
                         @Html.ActionLink("Details", "FullDetail", new { id = record.ProjectId })
-                        
+
                         @if (User.IsInRole("Submitter"))
                         {
 
                             @Html.ActionLink("CreateTicket", "CreateTicket", new { controller = "Tickets", id = record.ProjectId }@*, new { }*@)
                         }
-                            @*<a class="menu-title btn btn-info" href="@Url.Action("Edit", "Tickets", new{id = record.)">Users Page</a>*@
-                        </td>
-               </tr>
+
+                    </td>
+                </tr>
             }
 
-    
+
         </tbody>
     </table>
 }

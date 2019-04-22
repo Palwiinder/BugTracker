@@ -49,20 +49,17 @@ else
                 <td>@Model.CreatedBy.UserName</td>
                 <td>@Model.DateCreated</td>
                 <td>@Model.DateUpdated</td>
-
             </tr>
-
-
         </tbody>
     </table>
 }
-<td>@Model.Project</td>
+<p>@Model.Project</p>
 @if (@Model.AssignedTo != null)
 {
     <span>Assigned User : </span>
     <span>@Model.AssignedTo.UserName</span>
 }
-@if (Model.Attachments == null) 
+@if (Model.Attachments == null)
 {
     <h5>No Attachement</h5>
 }
@@ -77,7 +74,7 @@ else
 
 }
 <div>
-        <h4>Comments</h4>
+    <h4>Comments</h4>
     @foreach (var record in Model.Comments)
     {
         <p style="margin-bottom:-0px">@record.Comment</p>

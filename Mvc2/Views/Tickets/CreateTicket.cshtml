@@ -15,12 +15,7 @@
         @Html.LabelFor(p => p.Description, "Description:")
         @Html.TextAreaFor(p => p.Description, new { @class = "form-control", placeholder = "Description" })
     </div>
-    @*<select class="form-control valid" data-val="true" data-val-number="The field Category must be a number." data-val-required="The Category field is required." id="CategoryId" name="Type" aria-describedby="CategoryId-error" aria-invalid="false">
-            <option selected="selected" value="Bug">Bug</option>
-            <option value="Feature">Feature</option>
-            <option value="Database">Database</option>
-            <option value="Support"></option>
-        </select>*@
+
     <div class="form-group">
         @Html.DropDownListFor(p => p.TypeId, Model.TicketType)
     </div>
@@ -28,7 +23,7 @@
         @Html.DropDownListFor(p => p.PriorityId, Model.TicketPriority)
     </div>
     <div class="form-group">
-        
+
         <input type="file" name="Media" />
     </div>
     @Html.HiddenFor(p => p.ProjectId)
