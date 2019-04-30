@@ -30,5 +30,6 @@ namespace Mvc2.Models.ViewModel
         
         public string Project { get; set; }
         public List<Ticket> Ticket { get; set; }
+        public List<TicketHistory> TicketHistory { get; set; }
     }
 }

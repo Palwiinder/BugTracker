@@ -99,7 +99,7 @@
     </div>
     <!-- partial -->
     <div style="display: flex; flex-flow: row; justify-content: flex-start">
-        <div class="col-lg-4" style= "margin-right: 47px;
+        <div class="col-lg-4" style="margin-right: 47px;
     flex-basis: 100px;">
             <!-- partial:partials/_sidebar.html -->
             <nav class="sidebar" style=" display:inline;">
@@ -130,7 +130,9 @@
                     <li class="nav-item">
                         @*@Html.ActionLink("Dashboard", "Index", "Home", new { @class = "nav-link" })*@
 
-                        <a class="nav-link" href="@Url.Action("Index","Home")">
+                        @*<a class="nav-link" href="@Url.Action("Index","Home")">*@
+                        <a class="nav-link" href="@Url.Action("Dashboard","Project")">
+
                             <i class="menu-icon mdi mdi-television"></i>
                             <span class="menu-title">Dashboard</span>
                         </a>
@@ -170,7 +172,9 @@
         <div class="col-lg-8"> @RenderBody()</div>
     </div>
     @*@Html.Partial("_LoginPartial")*@
-
+    
+        
+   
     <footer class="footer">
         <div class="container-fluid clearfix">
 

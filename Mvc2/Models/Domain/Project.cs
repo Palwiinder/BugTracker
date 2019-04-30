@@ -11,6 +11,8 @@ namespace Mvc2.Models.Domain
         public virtual List<ApplicationUser> Users { get; set; }
         public virtual List<Ticket> Tickets { get; set; }
         public string ProjectName { get; set; }
+        public bool Archive { get; set; }
+
         public DateTime DateCreated { get; set; }
         public Project()
         {

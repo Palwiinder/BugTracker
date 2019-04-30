@@ -13,7 +13,6 @@ using Mvc2.Models;
 namespace Mvc2.Controllers
 
 {
-    [Authorize]
 
     public class AccountController : Controller
     {
@@ -54,7 +53,6 @@ namespace Mvc2.Controllers
             }
         }
 
-        //
         // GET: /Account/Login
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -63,9 +61,9 @@ namespace Mvc2.Controllers
             return View();
         }
 
-        //
         // POST: /Account/Login
         [HttpPost]
+       
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
@@ -92,6 +90,37 @@ namespace Mvc2.Controllers
                     return View(model);
             }
         }
+
+        public ActionResult DemoLogins(string user)
+        {
+            var role = SelectRole(user);
+            if (role != null)
+            {
+                SignInManager.SignIn(role, false, false);
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+        public ApplicationUser SelectRole(string role)
+        {
+            var db = new ApplicationDbContext();
+            ApplicationUser user;
+
+
+            switch (role)
+            {
+                case "Admin":
+                    return db.Users.Where(p => p.Email == "admin@mybugtracker.com").FirstOrDefault();
+                case "Project Manager":
+                    return db.Users.Where(p => p.Email == "projectmanager@mybugtracker.com").FirstOrDefault();
+                case "Developer":
+                    return db.Users.Where(p => p.Email == "developer@mybugtracker.com").FirstOrDefault();
+                case "Submitter":
+                    return db.Users.Where(p => p.Email == "submitter@mybugtracker.com").FirstOrDefault();
+                default: return user = null;
+            }
+        }
+
 
         //
         // GET: /Account/VerifyCode

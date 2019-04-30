@@ -23,7 +23,7 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table id="sample-datatables" class="table table-striped">
+<table id="sample-datatables" class="table ">
     <thead>
         <tr>
             <th>
@@ -71,7 +71,7 @@
                         @Html.DisplayFor(modelItem => item.DateUpdated)
                     </td>
                     <td>
-                        @Html.ActionLink("Edit", "Tickets", new { id = item.TicketId }) |
+                        @Html.ActionLink("Edit", "Edit", new { id = item.TicketId }) |
                         @Html.ActionLink("Detail", "Detail", new { id = item.TicketId }) |
                         
                         @Html.ActionLink("Mange Users", "AssignTickets", new { TicketId = item.TicketId })

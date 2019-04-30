@@ -189,10 +189,14 @@
     <Compile Include="Models\Domain\Ticket.cs" />
     <Compile Include="Models\Domain\TicketAttachments.cs" />
     <Compile Include="Models\Domain\TicketComment.cs" />
+    <Compile Include="Models\Domain\TicketHistory.cs" />
     <Compile Include="Models\Domain\TicketPriority.cs" />
     <Compile Include="Models\Domain\TicketStatus.cs" />
     <Compile Include="Models\Domain\TicketType.cs" />
     <Compile Include="Models\EmailService.cs" />
+    <Compile Include="Models\Filters\AuthorizeFilter.cs" />
+    <Compile Include="Models\Filters\ExceptionFilter.cs" />
+    <Compile Include="Models\Filters\LogActionFilter.cs" />
     <Compile Include="Models\Helpers\ProjectHelper.cs" />
     <Compile Include="Models\Helpers\RolesHelper.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -203,6 +207,7 @@
     <Compile Include="Models\ViewModel\CreateCommentViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateProjectViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateTicketViewModel.cs" />
+    <Compile Include="Models\ViewModel\DashBoardViewModel.cs" />
     <Compile Include="Models\ViewModel\IndexProjectViewModel.cs" />
     <Compile Include="Models\ViewModel\RoleViewModel.cs" />
     <Compile Include="Models\ViewModel\ShowProjectViewModel.cs" />
@@ -2062,7 +2067,9 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -2277,6 +2284,9 @@
     <Content Include="Views\Tickets\EditComment.cshtml" />
     <Content Include="Views\Tickets\AllTickets.cshtml" />
     <Content Include="Views\Tickets\AssignTickets.cshtml" />
+    <Content Include="Views\Project\Unarthorize.cshtml" />
+    <Content Include="Views\Project\Exception.cshtml" />
+    <Content Include="Views\Project\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

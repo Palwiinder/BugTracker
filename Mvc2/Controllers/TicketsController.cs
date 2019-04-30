@@ -1,14 +1,18 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using Mvc2.Models;
 using Mvc2.Models.Domain;
+using Mvc2.Models.Filters;
 using Mvc2.Models.Helpers;
 using Mvc2.Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 
 namespace Mvc2.Controllers
@@ -17,6 +21,7 @@ namespace Mvc2.Controllers
     {
         private ApplicationDbContext DbContext;
         private ProjectHelper ProjectHelper;
+
         public TicketsController()
         {
             DbContext = new ApplicationDbContext();
@@ -32,7 +37,8 @@ namespace Mvc2.Controllers
         {
             var userId = User.Identity.GetUserId();
             var model = DbContext.TicketsDatabase
-                .Where(ticket => ticket.CreatedById == userId)
+                .Where(p => p.Project.Archive == false)
+                .Where(ticket => ticket.CreatedById == userId) 
                .Select(p => new TicketsViewModel
                {
                    TicketId = p.Id,
@@ -47,10 +53,13 @@ namespace Mvc2.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Admin,ProjectManager")]
+        [AuthorizeFilter(Roles = "Admin,ProjectManager")]
+        
         public ActionResult AllTickets()
         {
+           
             var model = DbContext.TicketsDatabase.ToList()
+                .Where(p => p.Project.Archive == false)
                .Select(p => new TicketsViewModel
                {
                    TicketId = p.Id,
@@ -61,6 +70,7 @@ namespace Mvc2.Controllers
                    DateCreated = p.DateCreated,
                    DateUpdated = p.DateUpdated,
                }).ToList();
+               
 
             return View(model);
         }
@@ -93,6 +103,7 @@ namespace Mvc2.Controllers
                     Value = p.Id.ToString(),
                 }).ToList(),
                 ProjectId = id.Value,
+                
                 //UserName = userName,
 
             };
@@ -109,9 +120,35 @@ namespace Mvc2.Controllers
 
         private ActionResult SaveTicket(int? id, CreateTicketViewModel formData)
         {
+            var userId = User.Identity.GetUserId();
+            var ticketPriority = DbContext.TicketsPriorityDatabase.ToList();
+
             if (!ModelState.IsValid)
             {
-                return View();
+                //var userName = User.Identity.GetUserName();
+                //string userName = DbContext.Users.ToList()[0].UserName;
+                var ticketType = DbContext.TicketsTypeDatabase.ToList();
+                var ticketAttachment = new CreateAttachmetsViewModel() { };
+                var model = new CreateTicketViewModel
+                {
+                    TicketType = ticketType.Select(p => new SelectListItem()
+                    {
+                        Text = p.Name,
+                        Value = p.Id.ToString(),
+                    }).ToList(),
+                    TicketPriority = ticketPriority.Select(p => new SelectListItem()
+                    {
+                        Text = p.Name,
+                        Value = p.Id.ToString(),
+                    }).ToList(),
+                    ProjectId = id.HasValue ? id.Value : formData.ProjectId,
+                    
+                    
+                    //UserName = userName,
+
+                };
+
+                return View(model);
             }
 
             string fileExtension;
@@ -125,12 +162,12 @@ namespace Mvc2.Controllers
                 {
                     ModelState.AddModelError("", "File extension is not allowed.");
 
-                    return RedirectToAction(nameof(Tickets));
+                    return RedirectToAction(nameof(AllTickets));
                 }
             }
 
             Ticket ticket;
-            var userId = User.Identity.GetUserId();
+            //var userId = User.Identity.GetUserId();
             if (!id.HasValue)
             {
                 ticket = new Ticket();
@@ -142,6 +179,9 @@ namespace Mvc2.Controllers
                 ticket.CreatedBy = applicationUser;
                 ticket.ProjectId = formData.ProjectId;
                 ticket.TicketStatusId = DbContext.TicketsStatusDatabase.First(p => p.Name == "Open").Id;
+                var userM = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+
+                userM.SendEmailAsync(userId, "Notification", "There is a new Ticket Created for project You Belong To");
                 DbContext.TicketsDatabase.Add(ticket);
             }
             else
@@ -150,8 +190,14 @@ namespace Mvc2.Controllers
                 ticket.DateUpdated = DateTime.Now;
 
                 var status = DbContext.TicketsStatusDatabase.FirstOrDefault(p => p.Id == formData.StatusId);
-                ticket.TicketStatusId = status.Id;
-
+                //ticket.TicketStatusId = status.Id;
+                TicketHistory(ticket);
+                //if (User.IsInRole ("Admin,ProjectManager") && ticket.SendNotification == true)
+                //{
+                //var userM = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                //userM.SendEmailAsync(userId, "Notification", "There is a new Attachment for Ticket You Belong To");
+                //}
+                DbContext.SaveChanges();
                 if (ticket == null)
                 {
                     return RedirectToAction(nameof(HomeController.Index));
@@ -169,6 +215,9 @@ namespace Mvc2.Controllers
 
                 formData.Media.SaveAs(fullPathWithName);
                 var media = DbContext.TicketsAttachmentsDatabase.FirstOrDefault(p => p.TicketId == ticket.Id);
+
+
+
                 TicketAttachments attachment;
                 if (media == null)
                 {
@@ -179,17 +228,27 @@ namespace Mvc2.Controllers
                         UserId = ticket.CreatedById,
 
                     };
+                    var userM = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+
+                    userM.SendEmailAsync(userId, "Notification", "There is a new Attachment for Ticket You Belong To");
                     DbContext.TicketsAttachmentsDatabase.Add(attachment);
                     ticket.Attachments.Add(attachment);
                 }
             }
-            var ticketPriority = DbContext.TicketsPriorityDatabase.FirstOrDefault(p => p.Id == formData.PriorityId);
+            var tp = DbContext.TicketsPriorityDatabase.FirstOrDefault(p => p.Id == formData.PriorityId);
             var type = DbContext.TicketsTypeDatabase.FirstOrDefault(p => p.Id == formData.TypeId);
-            ticket.Title = formData.Title;
 
-            ticket.TicketPriorityId = ticketPriority.Id;
+            ticket.Title = formData.Title;
+            ticket.Description = formData.Description;
+            ticket.TicketPriorityId = tp.Id;
+            ticket.TicketPriorityId = formData.PriorityId;
+            ticket.TicketTypeId = formData.TypeId;
             ticket.TicketTypeId = type.Id;
+            var userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+
+            userManager.SendEmailAsync(userId, "Notification", "Some changes have been made to a Ticket that You Are Assigned to");
             DbContext.SaveChanges();
+
             return RedirectToAction(nameof(TicketsController.Tickets));
         }
 
@@ -243,23 +302,21 @@ namespace Mvc2.Controllers
                     Value = p.Id.ToString(),
                 }).ToList(),
                 ProjectId = id.Value,
-                
 
                 //Users = p.Users ?? new List<ApplicationUser>(),
             };
-
             return View(model);
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,ProjectManager,submitter")]
+        [Authorize(Roles = "Admin,ProjectManager,Submitter")]
         public ActionResult Edit(int id, CreateTicketViewModel formData)
         {
             return SaveTicket(id, formData);
-
         }
 
         [HttpGet]
+        [ExceptionFilter]
         public ActionResult Detail(int? id)
         {
             if (!id.HasValue)
@@ -267,7 +324,7 @@ namespace Mvc2.Controllers
                 return RedirectToAction(nameof(TicketsController.Tickets));
             }
 
-            var ticket = DbContext.TicketsDatabase.FirstOrDefault(p => p.Id == id);
+            var ticket = DbContext.TicketsDatabase.Where(p => p.Project.Archive == false).FirstOrDefault(p => p.Id == id);
             if (ticket == null)
             {
                 return RedirectToAction(nameof(TicketsController.Tickets));
@@ -279,6 +336,7 @@ namespace Mvc2.Controllers
                 Title = ticket.Title,
                 Description = ticket.Description,
                 Id = ticket.Id,
+                TicketHistory = ticket.TicketHistory,
                 Comments = ticket.Comments,
                 Attachments = ticket.Attachments.ToList(),
                 CreatedBy = DbContext.Users.FirstOrDefault(p => p.Id == ticket.CreatedById),
@@ -289,8 +347,8 @@ namespace Mvc2.Controllers
                 Priority = DbContext.TicketsPriorityDatabase.First(p => p.Id == ticket.TicketPriorityId).Name,
                 DateCreated = ticket.DateCreated,
                 DateUpdated = ticket.DateUpdated,
-               
-                
+
+
             };
             return View(model);
         }
@@ -326,12 +384,14 @@ namespace Mvc2.Controllers
                 comment.User = user;
                 comment.Ticket = ticket;
                 comment.TicketId = ticket.Id;
-
                 ticket.Comments.Add(comment);
                 DbContext.TicketsCommentsDatabase.Add(comment);
+                DbContext.SaveChanges();
             }
             else
             {
+                var userId = User.Identity.GetUserId();
+                var user = DbContext.Users.FirstOrDefault(p => p.Id == userId);
                 comment = DbContext.TicketsCommentsDatabase.FirstOrDefault(p => p.Id == id);
                 if (comment == null)
                 {
@@ -339,8 +399,11 @@ namespace Mvc2.Controllers
                 }
                 comment.Comment = formData.Comment;
                 comment.DateUpdated = DateTime.Now;
+                var userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+
+                userManager.SendEmailAsync(userId, "Notification", "You are assigned to a new Project");
+                DbContext.SaveChanges();
             }
-            DbContext.SaveChanges();
             return RedirectToAction(nameof(TicketsController.Tickets));
         }
 
@@ -431,8 +494,25 @@ namespace Mvc2.Controllers
 
             return View(model);
         }
-        [HttpPost]
 
+        public ActionResult DeleteAttachments(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return RedirectToAction(nameof(TicketsController.Tickets));
+            }
+            string userId = User.Identity.GetUserId();
+            var attachment = DbContext.TicketsAttachmentsDatabase.FirstOrDefault(p => p.Id == id && p.UserId == userId);
+            if (attachment != null)
+            {
+                DbContext.TicketsAttachmentsDatabase.Remove(attachment);
+                DbContext.SaveChanges();
+            }
+            return RedirectToAction(nameof(TicketsController.Tickets));
+        }
+
+        [HttpPost]
+        [AuthorizeFilter(Roles = "Admin,ProjectManager")]
         public ActionResult AssignTickets(AssignTicketsViewModel model)
         {
             var ticket = DbContext.TicketsDatabase.FirstOrDefault(p => p.Id == model.TicketId);
@@ -451,11 +531,41 @@ namespace Mvc2.Controllers
 
             if (model.SelectedAddUsers != null)
             {
-                ticket.AssignedTo = DbContext.Users.FirstOrDefault(p => p.Id == model.SelectedAddUsers);
-            }
+                var assignedUser = DbContext.Users.FirstOrDefault(p => p.Id == model.SelectedAddUsers);
+                ticket.AssignedTo = assignedUser;
+                var userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
 
-            DbContext.SaveChanges();
+                userManager.SendEmailAsync(assignedUser.Id, "Notification", "You are assigned to a new Project");
+                DbContext.SaveChanges();
+            }
             return RedirectToAction("Index");
+
+        }
+
+        public  void TicketHistory(Ticket ticket)
+        {
+            var userId = User.Identity.GetUserId();
+            var ticketHistory = new List<TicketHistory>();
+            var originalValues = DbContext.Entry(ticket).OriginalValues;
+            var currentValues = DbContext.Entry(ticket).CurrentValues;
+
+            foreach (var property in originalValues.PropertyNames)
+            {
+                var originalValue = originalValues[property]?.ToString();
+                var currentValue = currentValues[property]?.ToString();
+                if (originalValue != currentValue)
+                {
+                    var history = new TicketHistory();
+                    history.DateChanged = DateTime.Now;
+                    history.NewValue = currentValue;
+                    history.OldValue = originalValue;
+                    history.Property = property;
+                    history.Id = ticket.Id;
+                    history.UserId = userId;
+                    ticketHistory.Add(history);
+                }
+            }
+            DbContext.TicketsHistoryDatabase.AddRange(ticketHistory);
         }
     }
 }

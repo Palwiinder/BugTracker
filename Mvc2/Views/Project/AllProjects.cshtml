@@ -33,7 +33,7 @@
                 @Html.DisplayNameFor(model => model.DateUpdated)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Tickets)
+                @Html.DisplayNameFor(model => model.TicketCount)
             </th>
             <th>
             </th>
@@ -53,12 +53,16 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.DateUpdated)
                 </td>
-                @*<td>@Html.DisplayFor(modelItem => item.Tickets.Count())</td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.TicketCount)
+                </td>
 
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.ProjectId }) |
                     @Html.ActionLink("Details", "FullDetail", new { id = item.ProjectId })|
-                    @Html.ActionLink("Mange Users", "AssignProjects", new { ProjectId = item.ProjectId })
+                    @Html.ActionLink("Mange Users", "AssignProjects", new { ProjectId = item.ProjectId })|
+                    <form method="post" action="@Url.Action("Archive", "Project",new { id = item.ProjectId })"><button class="small xs" style="margin-bottom:15px">Archive</button> </form>
+                    @*@Html.ActionLink("Archive", "Archive", new { ProjectId = item.ProjectId })*@
                 </td>
             </tr>
         }
@@ -66,3 +70,4 @@
     </tbody>
 
 </table>
+<h1>You cant see this</h1>

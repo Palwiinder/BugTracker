@@ -26,9 +26,10 @@ namespace Mvc2.Models.Helpers
         public List<Project> GetUsersProjects(string userId)
         {
             return DbContext.ProjectDatabase
+                .Where(project => project.Archive == false)
                 .Where(project => project.Users.Any(user => user.Id == userId))
                 .ToList();
         }
-        public List<Project> GetAllProjects() => DbContext.ProjectDatabase.ToList();
+        public List<Project> GetAllProjects() => DbContext.ProjectDatabase.Where(project => project.Archive == false ).ToList();
     }
 }

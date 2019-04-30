@@ -73,6 +73,72 @@ namespace Mvc2.Migrations
                 userManager.AddToRole(adminUser.Id, "Admin");
             }
 
+
+            ApplicationUser projectManagerUser;
+
+            if (!context.Users.Any(p => p.UserName == "projectManager@mybugtracker.com"))
+            {
+                projectManagerUser = new ApplicationUser();
+                projectManagerUser.UserName = "projectManager@mybugtracker.com";
+                projectManagerUser.Email = "projectManager@mybugtracker.com";
+                projectManagerUser.EmailConfirmed = true; //To Test Email if Confirmed or not.
+                projectManagerUser.DisplayName = "projectManagerUser";
+                userManager.Create(projectManagerUser, "Password-1");
+            }
+            else
+            {
+                projectManagerUser = context.Users.First(p => p.UserName == "projectManager@mybugtracker.com");
+            }
+
+            if (!userManager.IsInRole(projectManagerUser.Id, "ProjectManager"))
+            {
+                userManager.AddToRole(projectManagerUser.Id, "ProjectManager");
+            }
+
+            ApplicationUser developerUser;
+
+            if (!context.Users.Any(p => p.UserName == "developer@mybugtracker.com"))
+            {
+                developerUser = new ApplicationUser();
+                developerUser.UserName = "developer@mybugtracker.com";
+                developerUser.Email = "developer@mybugtracker.com";
+                developerUser.EmailConfirmed = true; //To Test Email if Confirmed or not.
+                developerUser.DisplayName = "developerUser";
+                userManager.Create(developerUser, "Password-1");
+            }
+            else
+            {
+                developerUser = context.Users.First(p => p.UserName == "developer@mybugtracker.com");
+            }
+
+            if (!userManager.IsInRole(developerUser.Id, "Developer"))
+            {
+                userManager.AddToRole(developerUser.Id, "Developer");
+            }
+
+
+            ApplicationUser submitterUser;
+
+            if (!context.Users.Any(p => p.UserName == "submitter@mybugtracker.com"))
+            {
+                submitterUser = new ApplicationUser();
+                submitterUser.UserName = "submitter@mybugtracker.com";
+                submitterUser.Email = "submitter@mybugtracker.com";
+                submitterUser.EmailConfirmed = true; //To Test Email if Confirmed or not.
+                submitterUser.DisplayName = "submitterUser";
+                userManager.Create(submitterUser, "Password-1");
+            }
+            else
+            {
+                submitterUser = context.Users.First(p => p.UserName == "submitter@mybugtracker.com");
+            }
+
+            if (!userManager.IsInRole(submitterUser.Id, "Submitter"))
+            {
+                userManager.AddToRole(submitterUser.Id, "Submitter");
+            }
+
+
             if (!context.TicketsTypeDatabase.Any(p => p.Name == "Bug"))
             {
                 var bug = new TicketType();

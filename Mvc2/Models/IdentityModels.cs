@@ -49,6 +49,7 @@ namespace Mvc2.Models
         public DbSet<TicketStatus> TicketsStatusDatabase { get; set; }
         public DbSet<TicketAttachments> TicketsAttachmentsDatabase { get; set; }
         public DbSet<TicketComment> TicketsCommentsDatabase { get; set; }
+        public DbSet<TicketHistory> TicketsHistoryDatabase { get; set; }
 
 
         public static ApplicationDbContext Create()

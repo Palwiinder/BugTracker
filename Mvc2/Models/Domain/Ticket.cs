@@ -18,7 +18,7 @@ namespace Mvc2.Models.Domain
             DateCreated = DateTime.Now;
             Comments = new List<TicketComment>();
             Attachments = new List<TicketAttachments>();
-            Project = new Project();
+            TicketHistory = new List<TicketHistory>();
         }
 
         public virtual Project Project { get; set; }
@@ -33,11 +33,13 @@ namespace Mvc2.Models.Domain
         public int TicketStatusId { get; set; }
         public virtual ApplicationUser CreatedBy { get; set; }
         public string CreatedById { get; set; }
+        public virtual List<ApplicationUser> SendNotification { get; set; }
 
         public virtual ApplicationUser AssignedTo { get; set; }
         public string AssignedToId { get; set; }
 
         public virtual List<TicketComment> Comments { get; set; }
         public virtual List<TicketAttachments> Attachments { get; set; }
+        public virtual List<TicketHistory> TicketHistory { get; set; }
     }
 }
