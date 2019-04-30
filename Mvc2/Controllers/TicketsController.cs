@@ -192,11 +192,12 @@ namespace Mvc2.Controllers
                 var status = DbContext.TicketsStatusDatabase.FirstOrDefault(p => p.Id == formData.StatusId);
                 //ticket.TicketStatusId = status.Id;
                 TicketHistory(ticket);
-                //if (User.IsInRole ("Admin,ProjectManager") && ticket.SendNotification == true)
-                //{
-                //var userM = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-                //userM.SendEmailAsync(userId, "Notification", "There is a new Attachment for Ticket You Belong To");
-                //}
+
+                foreach (var user in ticket.SendNotification)
+                {
+                    var userM = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                    userM.SendEmailAsync(userId, "Notification", "There is a new Attachment for Ticket You Belong To").Wait();
+                }
                 DbContext.SaveChanges();
                 if (ticket == null)
                 {
@@ -540,6 +541,26 @@ namespace Mvc2.Controllers
             }
             return RedirectToAction("Index");
 
+        }
+
+        public ActionResult AddNotifications(int? TicketId)
+        {
+            var userId = User.Identity.GetUserId();
+            var user = DbContext.Users.FirstOrDefault(p => p.Id == userId );
+            var ticket = DbContext.TicketsDatabase.FirstOrDefault(p => p.Id == TicketId);
+            ticket.SendNotification.Add(user);
+            DbContext.SaveChanges();
+        return RedirectToAction("Index");
+        }
+
+        public ActionResult RemoveNotifications(int? TicketId)
+        {
+            var userId = User.Identity.GetUserId();
+            var user = DbContext.Users.FirstOrDefault(p => p.Id == userId);
+            var ticket = DbContext.TicketsDatabase.FirstOrDefault(p => p.Id == TicketId);
+            ticket.SendNotification.Remove(user);
+            DbContext.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         public  void TicketHistory(Ticket ticket)

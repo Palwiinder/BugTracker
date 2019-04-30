@@ -73,8 +73,10 @@
                     <td>
                         @Html.ActionLink("Edit", "Edit", new { id = item.TicketId }) |
                         @Html.ActionLink("Detail", "Detail", new { id = item.TicketId }) |
-                        
+
                         @Html.ActionLink("Mange Users", "AssignTickets", new { TicketId = item.TicketId })
+                        @Html.ActionLink("SendNotification", "AddNotifications", new { TicketId = item.TicketId })
+                        @Html.ActionLink("RemoveNotification", "RemoveNotifications", new { TicketId = item.TicketId })
                     </td>
                 </tr>
             }
