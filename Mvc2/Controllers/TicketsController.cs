@@ -37,8 +37,7 @@ namespace Mvc2.Controllers
         {
             var userId = User.Identity.GetUserId();
             var model = DbContext.TicketsDatabase
-                .Where(p => p.Project.Archive == false)
-                .Where(ticket => ticket.CreatedById == userId) 
+                .Where(p => p.Project.Archive == false && p.CreatedById == userId || p.AssignedToId == userId)
                .Select(p => new TicketsViewModel
                {
                    TicketId = p.Id,
@@ -46,6 +45,8 @@ namespace Mvc2.Controllers
                    Description = p.Description,
                    Priority = p.TicketPriority.Name,
                    Type = p.TicketType.Name,
+                   CreatedBy = p.CreatedBy,
+                   AssignedTo = p.AssignedTo,
                    DateCreated = p.DateCreated,
                    DateUpdated = p.DateUpdated,
                }).ToList();
@@ -409,7 +410,6 @@ namespace Mvc2.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public ActionResult EditComment(int? id)
         {
             if (!id.HasValue)
@@ -431,14 +431,13 @@ namespace Mvc2.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+       
         public ActionResult EditComment(int id, CreateCommentViewModel formData)
         {
             return SaveComment(id, formData);
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (!id.HasValue)
@@ -496,6 +495,8 @@ namespace Mvc2.Controllers
             return View(model);
         }
 
+
+        [HttpPost]
         public ActionResult DeleteAttachments(int? id)
         {
             if (!id.HasValue)
@@ -503,7 +504,8 @@ namespace Mvc2.Controllers
                 return RedirectToAction(nameof(TicketsController.Tickets));
             }
             string userId = User.Identity.GetUserId();
-            var attachment = DbContext.TicketsAttachmentsDatabase.FirstOrDefault(p => p.Id == id && p.UserId == userId);
+            var admin = User.IsInRole("Admin");
+            var attachment = DbContext.TicketsAttachmentsDatabase.FirstOrDefault(p => p.Id == id && p.UserId == userId || admin);
             if (attachment != null)
             {
                 DbContext.TicketsAttachmentsDatabase.Remove(attachment);
