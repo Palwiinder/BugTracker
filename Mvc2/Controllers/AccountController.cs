@@ -103,20 +103,20 @@ namespace Mvc2.Controllers
         }
         public ApplicationUser SelectRole(string role)
         {
-            var db = new ApplicationDbContext();
+            var DbContext = new ApplicationDbContext();
             ApplicationUser user;
 
 
             switch (role)
             {
                 case "Admin":
-                    return db.Users.Where(p => p.Email == "admin@mybugtracker.com").FirstOrDefault();
+                    return DbContext.Users.Where(p => p.Email == "admin@mybugtracker.com").FirstOrDefault();
                 case "Project Manager":
-                    return db.Users.Where(p => p.Email == "projectmanager@mybugtracker.com").FirstOrDefault();
+                    return DbContext.Users.Where(p => p.Email == "projectmanager@mybugtracker.com").FirstOrDefault();
                 case "Developer":
-                    return db.Users.Where(p => p.Email == "developer@mybugtracker.com").FirstOrDefault();
+                    return DbContext.Users.Where(p => p.Email == "developer@mybugtracker.com").FirstOrDefault();
                 case "Submitter":
-                    return db.Users.Where(p => p.Email == "submitter@mybugtracker.com").FirstOrDefault();
+                    return DbContext.Users.Where(p => p.Email == "submitter@mybugtracker.com").FirstOrDefault();
                 default: return user = null;
             }
         }

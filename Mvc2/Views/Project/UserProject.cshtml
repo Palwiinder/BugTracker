@@ -1,21 +1,6 @@
 ﻿@model List<IndexProjectViewModel>
 
-@{
-    ViewBag.Title = "AllProject";
-}
 
-@section css {
-    <link rel="stylesheet"
-          href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
-}
-@section Scripts {
-    <script type="text/javascript"
-            src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#sample-datatables').DataTable();
-        });</script>
-}
 
 <h2>AllProject</h2>
 
@@ -51,7 +36,7 @@
                                                 <p>@record.ProjectName</p>
                                                 <p>@record.DateCreated</p>
                                                 <p>@record.DateUpdated</p>
-                                                <p>@record.Tickets</p>
+                                                <p>@record.TicketCount</p>
                                                 <p>
                                                     <a href="@Url.Action("Edit", "Project", new { id = record.ProjectId })">Edit</a>
 

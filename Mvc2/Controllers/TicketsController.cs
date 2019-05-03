@@ -15,8 +15,10 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
 
+
 namespace Mvc2.Controllers
 {
+    [Authorize]
     public class TicketsController : Controller
     {
         private ApplicationDbContext DbContext;
@@ -44,6 +46,7 @@ namespace Mvc2.Controllers
                    Title = p.Title,
                    Description = p.Description,
                    Priority = p.TicketPriority.Name,
+                   Status = p.TicketStatus.Name,
                    Type = p.TicketType.Name,
                    CreatedBy = p.CreatedBy,
                    AssignedTo = p.AssignedTo,
@@ -68,6 +71,7 @@ namespace Mvc2.Controllers
                    Description = p.Description,
                    Priority = p.TicketPriority.Name,
                    Type = p.TicketType.Name,
+                   Status = p.TicketStatus.Name,
                    DateCreated = p.DateCreated,
                    DateUpdated = p.DateUpdated,
                }).ToList();
@@ -88,6 +92,7 @@ namespace Mvc2.Controllers
             var userId = User.Identity.GetUserId();
             //var userName = User.Identity.GetUserName();
             //string userName = DbContext.Users.ToList()[0].UserName;
+            var ticket = DbContext.TicketsDatabase.FirstOrDefault(p => p.Id == id);
             var ticketType = DbContext.TicketsTypeDatabase.ToList();
             var ticketPriority = DbContext.TicketsPriorityDatabase.ToList();
             var ticketAttachment = new CreateAttachmetsViewModel() { };
@@ -97,11 +102,13 @@ namespace Mvc2.Controllers
                 {
                     Text = p.Name,
                     Value = p.Id.ToString(),
+                    
                 }).ToList(),
                 TicketPriority = ticketPriority.Select(p => new SelectListItem()
                 {
                     Text = p.Name,
                     Value = p.Id.ToString(),
+                   
                 }).ToList(),
                 ProjectId = id.Value,
                 
@@ -123,7 +130,7 @@ namespace Mvc2.Controllers
         {
             var userId = User.Identity.GetUserId();
             var ticketPriority = DbContext.TicketsPriorityDatabase.ToList();
-
+            var tickets = DbContext.TicketsDatabase.FirstOrDefault(p => p.Id == id);
             if (!ModelState.IsValid)
             {
                 //var userName = User.Identity.GetUserName();
@@ -136,11 +143,13 @@ namespace Mvc2.Controllers
                     {
                         Text = p.Name,
                         Value = p.Id.ToString(),
+                        Selected = (tickets?.TicketTypeId ?? -1) == p.Id,
                     }).ToList(),
                     TicketPriority = ticketPriority.Select(p => new SelectListItem()
                     {
                         Text = p.Name,
                         Value = p.Id.ToString(),
+                        Selected = (tickets?.TicketPriorityId ?? -1) == p.Id,
                     }).ToList(),
                     ProjectId = id.HasValue ? id.Value : formData.ProjectId,
                     
@@ -182,7 +191,7 @@ namespace Mvc2.Controllers
                 ticket.TicketStatusId = DbContext.TicketsStatusDatabase.First(p => p.Name == "Open").Id;
                 var userM = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
 
-                userM.SendEmailAsync(userId, "Notification", "There is a new Ticket Created for project You Belong To");
+                userM.SendEmail(userId, "Notification", "There is a new Ticket Created for project You Belong To");
                 DbContext.TicketsDatabase.Add(ticket);
             }
             else
@@ -191,15 +200,11 @@ namespace Mvc2.Controllers
                 ticket.DateUpdated = DateTime.Now;
 
                 var status = DbContext.TicketsStatusDatabase.FirstOrDefault(p => p.Id == formData.StatusId);
-                //ticket.TicketStatusId = status.Id;
-                TicketHistory(ticket);
+                ticket.TicketStatusId = status?.Id ?? DbContext.TicketsStatusDatabase.First(p=>p.Name == "Open").Id;
+                //TicketHistory(ticket);
 
-                foreach (var user in ticket.SendNotification)
-                {
-                    var userM = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-                    userM.SendEmailAsync(userId, "Notification", "There is a new Attachment for Ticket You Belong To").Wait();
-                }
-                DbContext.SaveChanges();
+                
+                //DbContext.SaveChanges();
                 if (ticket == null)
                 {
                     return RedirectToAction(nameof(HomeController.Index));
@@ -216,12 +221,12 @@ namespace Mvc2.Controllers
                 var fullPathWithName = Constants.MappedUploadFolder + fileName;
 
                 formData.Media.SaveAs(fullPathWithName);
-                var media = DbContext.TicketsAttachmentsDatabase.FirstOrDefault(p => p.TicketId == ticket.Id);
+                //var media = DbContext.TicketsAttachmentsDatabase.FirstOrDefault(p => p.TicketId == ticket.Id);
 
 
 
                 TicketAttachments attachment;
-                if (media == null)
+                if (true)
                 {
                     attachment = new TicketAttachments()
                     {
@@ -232,9 +237,9 @@ namespace Mvc2.Controllers
                     };
                     var userM = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
 
-                    userM.SendEmailAsync(userId, "Notification", "There is a new Attachment for Ticket You Belong To");
-                    DbContext.TicketsAttachmentsDatabase.Add(attachment);
+                    userM.SendEmail(userId, "Notification", "There is a new Attachment for Ticket You Belong To");
                     ticket.Attachments.Add(attachment);
+                    DbContext.TicketsAttachmentsDatabase.Add(attachment);
                 }
             }
             var tp = DbContext.TicketsPriorityDatabase.FirstOrDefault(p => p.Id == formData.PriorityId);
@@ -247,10 +252,19 @@ namespace Mvc2.Controllers
             ticket.TicketTypeId = formData.TypeId;
             ticket.TicketTypeId = type.Id;
             var userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            if (id.HasValue)
+            {
+                TicketHistory(ticket);
+            }
 
-            userManager.SendEmailAsync(userId, "Notification", "Some changes have been made to a Ticket that You Are Assigned to");
+            foreach (var user in ticket.SendNotification)
+            {
+                var userM = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                userM.SendEmail(userId, "Notification", "There is a new Attachment for Ticket You Belong To");
+            }
+            //userManager.SendEmail(userId, "Notification", "Some changes have been made to a Ticket that You Are Assigned to");
             DbContext.SaveChanges();
-
+            
             return RedirectToAction(nameof(TicketsController.Tickets));
         }
 
@@ -258,7 +272,7 @@ namespace Mvc2.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "Admin,ProjectManager,Submitter")]
+        
         public ActionResult Edit(int? id)
         {
             if (!id.HasValue)
@@ -288,20 +302,26 @@ namespace Mvc2.Controllers
                 Description = ticket.Description,
                 AssignedTo = ticket.AssignedTo,
                 MediaUrl = ticket.MediaUrl,
+                PriorityId = ticket.TicketPriorityId,
+                TypeId = ticket.TicketTypeId,
+                StatusId = ticket.TicketStatusId,
                 TicketType = ticketType.Select(p => new SelectListItem()
                 {
                     Text = p.Name,
                     Value = p.Id.ToString(),
+                    Selected = (ticket?.TicketTypeId ?? -1) == p.Id,
                 }).ToList(),
                 TicketPriority = ticketPriority.Select(p => new SelectListItem()
                 {
                     Text = p.Name,
                     Value = p.Id.ToString(),
+                    Selected = (ticket?.TicketPriorityId ?? -1) == p.Id,
                 }).ToList(),
                 TicketStatus = ticketStatus.Select(p => new SelectListItem()
                 {
                     Text = p.Name,
                     Value = p.Id.ToString(),
+                    Selected = (ticket?.TicketStatusId ?? -1) == p.Id,
                 }).ToList(),
                 ProjectId = id.Value,
 
@@ -311,7 +331,7 @@ namespace Mvc2.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,ProjectManager,Submitter")]
+        
         public ActionResult Edit(int id, CreateTicketViewModel formData)
         {
             return SaveTicket(id, formData);
@@ -403,7 +423,7 @@ namespace Mvc2.Controllers
                 comment.DateUpdated = DateTime.Now;
                 var userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
 
-                userManager.SendEmailAsync(userId, "Notification", "You are assigned to a new Project");
+                userManager.SendEmail(userId, "Notification", "You are assigned to a new Project");
                 DbContext.SaveChanges();
             }
             return RedirectToAction(nameof(TicketsController.Tickets));
@@ -442,7 +462,7 @@ namespace Mvc2.Controllers
         {
             if (!id.HasValue)
             {
-                return RedirectToAction(nameof(TicketsController.Tickets));
+                return RedirectToAction(nameof(TicketsController.Detail));
             }
             string userId = User.Identity.GetUserId();
             var comment = DbContext.TicketsCommentsDatabase.FirstOrDefault(p => p.Id == id && p.UserId == userId);
@@ -451,7 +471,7 @@ namespace Mvc2.Controllers
                 DbContext.TicketsCommentsDatabase.Remove(comment);
                 DbContext.SaveChanges();
             }
-            return RedirectToAction(nameof(TicketsController.Tickets));
+            return RedirectToAction(nameof(TicketsController.Detail),new { id = comment.TicketId  });
         }
 
 
@@ -583,7 +603,7 @@ namespace Mvc2.Controllers
                     history.NewValue = currentValue;
                     history.OldValue = originalValue;
                     history.Property = property;
-                    history.Id = ticket.Id;
+                    history.TicketId = ticket.Id;
                     history.UserId = userId;
                     ticketHistory.Add(history);
                 }

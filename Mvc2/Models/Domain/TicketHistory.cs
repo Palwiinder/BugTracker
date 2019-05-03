@@ -19,6 +19,8 @@ namespace Mvc2.Models.Domain
         public string NewValue { get; set; }
         public DateTime DateChanged { get; set; }
 
+        public int TicketId { get; set; }
+        public virtual Ticket Ticket { get; set; }
         public string UserId { get; set; }
         public virtual ApplicationUser User { get; set; }
     }

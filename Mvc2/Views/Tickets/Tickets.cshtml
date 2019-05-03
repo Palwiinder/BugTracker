@@ -5,23 +5,6 @@
 
 <h2>Tickets</h2>
 
-@section css {
-    <link rel="stylesheet"
-          href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
-}
-
-@section Scripts {
-    <script type="text/javascript"
-            src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js">
-    </script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#sample-datatables').DataTable();
-        });
-    </script>
-}
-
-
 
 @if (!Model.Any())
 {
@@ -39,6 +22,7 @@ else
                 <th>Description</th>
                 <th>Priority</th>
                 <th>Type</th>
+                <th>Status</th>
                 <th>Date Created</th>
                 <th>Date Updated</th>
                 <th></th>
@@ -51,6 +35,7 @@ else
                     <td>@record.Title</td>
                     <td>@record.Description</td>
                     <td>@record.Priority</td>
+                    <td>@record.Status</td>
                     <td>@record.Type</td>
                     <td>@record.DateCreated</td>
                     <td>@record.DateUpdated</td>
@@ -58,7 +43,7 @@ else
 
                         @Html.ActionLink("Edit", "Edit", new { id = record.TicketId }) |
                         @Html.ActionLink("Details", "Detail", new { id = record.TicketId })
-                        
+
                     </td>
                 </tr>
             }
@@ -67,3 +52,7 @@ else
         </tbody>
     </table>
 }
+
+
+
+

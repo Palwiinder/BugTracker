@@ -13,6 +13,7 @@ using System.Web.Mvc;
 
 namespace Mvc2.Controllers
 {
+    [Authorize]
     public class ProjectController : Controller
     {
         // GET: Project

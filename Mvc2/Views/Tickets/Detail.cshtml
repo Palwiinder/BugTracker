@@ -1,29 +1,248 @@
 ﻿@model ViewTicketViewModel
-
-@section css {
-    <link rel="stylesheet"
-          href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+@{
+    Layout = null;
 }
 
-@section Scripts {
-    <script type="text/javascript"
-            src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js">
-    </script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#sample-datatables').DataTable();
-        });
-    </script>
-}
+@*@model ViewTicketViewModel
+    @{
+        ViewBag.Title = "Details";
+    }
 
-@if (Model == null)
-{
-    <div style="margin-top:15px;">
-        <p><strong>No Comments Available </strong></p>
+    <div class="container">
+        <div class="row">
+            <div class="col-3">
+                <h3>Details</h3>
+                <table class="table" id="ticketList">
+                    <tr>
+                        <th>Title</th>
+                        <td>@Model.Title</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>@Model.Description</td>
+                    </tr>
+                    <tr>
+                        <th>DateCreated</th>
+                        <td>@Model.DateCreated</td>
+                    </tr>
+                    <tr>
+                        <th>DateUpdated</th>
+                        <td>@Model.DateUpdated</td>
+                    </tr>
+                    <tr>
+                        <th>Priority</th>
+                        <td>@Model.TicketPriorityName</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>@Model.TicketStatusName</td>
+                    </tr>
+                    <tr>
+                        <th>Type</th>
+                        <td>@Model.TicketTypeName</td>
+                    </tr>
+                    <tr>
+                        <th>Attachment</th>
+                        @foreach (var attachment in Model.Attachments)
+                        {
+                            <td>
+                                <a href="@attachment.FileUrl" download="">@attachment.FileUrl</a>
+                            </td>
+                        }
+                    </tr>
+                </table>
+                <div class="container">
+                    <h2>History</h2>
+                    @foreach (var item in Model.Histories)
+                    {
+                        <div class="panel panel-info">
+                            <div class="panel-body">
+                                @item.Property changed to @item.NewValue from @item.OldValue
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="col-9">
+                <div>
+                    <h3>Comments</h3>
+                    @foreach (var comments in Model.Comments)
+                    {
+                        <table class="table" id="ticketList">
+                            <tr>
+                                <th>Comment:</th>
+                                <td>@comments.CommentBody</td>
+                                <th>Posted:</th>
+                                <td> @comments.DateCreated</td>
+                                <th>By:</th>
+                                <td>@comments.Created</td>
+                                @if (User.IsInRole("Submitter") || User.IsInRole("Developer"))
+                                {
+                                    if (comments.Created == User.Identity.Name)
+                                    {
+                                        <td>@Html.ActionLink("Edit", "EditComments", new { id = comments.Id })</td>
+                                        <td>@Html.ActionLink("Delete", "DeleteComments", new { id = comments.Id })</td>
+                                    }
+                                }
+                                else
+                                {
+                                    <td>@Html.ActionLink("Edit", "EditComments", new { id = comments.Id })</td>
+                                    <td>@Html.ActionLink("Delete", "DeleteComments", new { id = comments.Id })</td>
+                                }
+                            </tr>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-6">
+                    <div class="row">
+                        @using (Html.BeginForm("Comment", "Ticket", new { id = Model.Id }, FormMethod.Post))
+                        {
+                            <div class="form-horizontal">
+                                <h4>Comment</h4>
+                                <hr />
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.CommentBody, "Comment:")
+                                    @Html.TextBoxFor(model => model.CommentBody, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.CommentBody, "", new { @class = "danger" })
+                                </div>
+                                <button type="submit" class="btn btn-default">Create</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-6">
+                    <form method="post" enctype='multipart/form-data'>
+                        <div class="form-horizontal">
+                            <h4>Attachment</h4>
+                            <hr />
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Media, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <input name="media" type="file" class="form-control" id="fileUpload" />
+                                @Html.ValidationMessageFor(model => model.Media, "", new { @class = "text-danger" })
+                            </div>
+                            <button type="submit" class="btn btn-default">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Star Admin Free Bootstrap Admin Dashboard Template</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="~/Template/vendors/iconfonts/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="~/Template/vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="~/Template/vendors/css/vendor.bundle.addons.css">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="~/Template/css/style.css">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="~/Template/images/favicon.png" />
+    <style>
+        .nav-link {
+            padding: 5px !important;
+        }
+
+        .nav-item {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-scroller" style="margin-bottom: 75px;">
+        <!-- partial:partials/_navbar.html -->
+        <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+            <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
+                <h3>
+                    Bug Tracker
+                </h3>
+
+            </div>
+            <div class="navbar-menu-wrapper d-flex align-items-center">
+                <style>
+                    .dropbtn {
+                        background-color: #4CAF50;
+                        color: white;
+                        padding: 16px;
+                        font-size: 16px;
+                        border: none;
+                        cursor: pointer;
+                    }
+
+                    .dropdown {
+                        position: relative;
+                        display: inline-block;
+                    }
+
+                    .dropdown-content {
+                        display: none;
+                        position: absolute;
+                        background-color: lightblue;
+                        min-width: 160px;
+                        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                        z-index: 1;
+                    }
+
+                        .dropdown-content a {
+                            color: blue;
+                            text-decoration: none;
+                        }
+
+                            .dropdown-content a:hover {
+                                background-color: #f1f1f1
+                            }
+
+                    .dropdown:hover .dropdown-content {
+                        display: block;
+                    }
+
+                    .dropdown:hover .dropbtn {
+                        background-color: blue;
+                    }
+                </style>
+
+                <div class="dropdown">
+                    <button class="btn-facebook">Account</button>
+                    <div class="dropdown-content">
+                        <a>@Html.Partial("_LoginPartial", new { @class = "nav-link" })</a>
+                        <a>
+                            @Html.ActionLink("Account Settings", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage",
+       })
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+            <span class="mdi mdi-menu"></span>
+        </button>
     </div>
-}
-else
-{
+    <!-- partial -->
+    <div>
+        <button class="alert-link" style="margin-left:8px;">@Html.ActionLink("Go Back", "Tickets")</button>
+
+    </div>
     <table id="sample-datatables" class="table table-striped">
         <thead>
             <tr>
@@ -35,11 +254,9 @@ else
                 <th>@nameof(Model.CreatedBy.UserName)</th>
                 <th>@nameof(Model.DateCreated)</th>
                 <th>@nameof(Model.DateUpdated)</th>
-
             </tr>
         </thead>
         <tbody>
-
             <tr>
                 <td>@Model.Title</td>
                 <td>@Model.Description</td>
@@ -50,90 +267,229 @@ else
                 <td>@Model.DateCreated</td>
                 <td>@Model.DateUpdated</td>
             </tr>
+            <tr>
+                <th>Attachment</th>
+                @if (Model.Attachments == null || Model.Attachments.Count() <= 0)
+                {
+                    <td>No Attachement</td>
+                }
+                else
+                {
+                    foreach (var record in Model.Attachments)
+                    {
+                        <td>
+
+                            <a href="@Url.Content(record?.MediaUrl ?? "~")" target="_blank">@(record?.MediaUrl)</a>
+                        </td>
+                        <td>
+                            <form method="post" action="@Url.Action("DeleteAttachments", "Tickets",new { id = record.Id })"><button class="small xs" style="margin-bottom:15px">Delete</button> </form>
+                        </td>
+                    }
+                }
+            </tr>
         </tbody>
     </table>
-}
+
+    <div class="container">
+        @*<div class="row">
+                <div class="col-7">
+                    <table id="sample-datatables" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>@nameof(Mvc2.Models.Domain.TicketHistory.Property)</th>
+                                <th>@nameof(Mvc2.Models.Domain.TicketHistory.OldValue)</th>
+                                <th>@nameof(Mvc2.Models.Domain.TicketHistory.NewValue)</th>
+                                <th>@nameof(Mvc2.Models.Domain.TicketHistory.User.UserName)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var record in Model.TicketHistory)
+                            {
+                                <tr>
+
+                                    <td>@record.Property</td>
+
+                                    <td>@record.OldValue</td>
+                                    <td>@record.NewValue</td>
+                                    <td>@record.User.UserName</td>
+
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>*@
+        <h2>History</h2>
+        <div>
+            @foreach (var item in Model.TicketHistory)
+            {
+                <div class="panel panel-info">
+
+                    <ul>
+
+                        <li><strong>@item.Property:</strong> changed to <i>@item.NewValue.</i> from <i>@item.OldValue.</i></li>
+                    </ul>
+
+                </div>
+            }
+
+        </div>
+    </div>
 
 
     <div class="container">
-        <div class="row">
-            <div class="col">col</div>
-            <div class="col">col</div>
-            <div class="col">col</div>
-            <div class="col">col</div>
-        </div>
-        <div class="row">
-            <div class="col-8">col-8</div>
-            <div class="col-4">col-4</div>
+        <div style="margin-left: -50px" class="row">
+            <div class="col-7">
+                <table id="sample-datatables" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>@nameof(Model.Comments)</th>
+                            <th>@nameof(Mvc2.Models.Domain.TicketComment.DateCreated)</th>
+                            <th>@nameof(Mvc2.Models.Domain.TicketComment.User.UserName)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var record in Model.Comments)
+                        {
+                            <tr>
+
+                                <td>@record.Comment</td>
+
+                                <td> @record.DateCreated</td>
+
+                                <td>@record.User.UserName</td>
+                                @if (User.IsInRole("Submitter") || User.IsInRole("Developer"))
+                                {
+                                    if (record.User.UserName == User.Identity.Name)
+                                    {
+                                        <td>@Html.ActionLink("Edit", "EditComment", new { id = record.Id })</td>
+                                        <td>
+                                            <form method="post" action="@Url.Action("Delete", "Tickets", new { id = record.Id })"><button class="btn-delete" style=" background:none;border:none;color:dodgerblue">Delete</button> </form>
+                                        </td>
+                                    }
+                                }
+                                else
+                                {
+                                    <td>@Html.ActionLink("Edit", "EditComment", new { id = record.Id })</td>
+                                    <td>
+                                        <form method="post" action="@Url.Action("Delete", "Tickets", new { id = record.Id })"><button class="btn-delete" style=" background:none;border:none;color:#007bff">Delete</button></form>
+                                    </td>
+                                }
+
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div>
+                    <form action="@Url.Action("CreateComment", "Tickets", new { TicketId = Model.Id })" method="post">
+                        <div class="form-group">
+                            <h4>Comment</h4>
+                            <input name="Comment" placeholder="Leave a comment"></input>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
         </div>
     </div>
 
 
-<p>@Model.Project</p>
-@if (@Model.AssignedTo != null)
-{
-    <span>Assigned User : </span>
-    <span>@Model.AssignedTo.UserName</span>
-}
-@if (Model.Attachments == null || Model.Attachments.Count() <= 0)
-{
-    <h5>No Attachement</h5>
-}
-else
-{
-    <h5 style="margin-top:15px;">Attachments : </h5>
-    <div class="row">
-        <div class="col-md-2" style="margin-bottom : 12px; margin-top:10px;">
-            @foreach (var record in Model.Attachments)
-            {
-                <a href="@Url.Content(record?.MediaUrl ?? "~")" target="_blank">@(record?.MediaUrl)</a>
-                <form method="post" action="@Url.Action("DeleteAttachments", "Tickets",new { id = record.Id })"><button class="small xs" style="margin-bottom:15px">Delete</button> </form>
-            }
-        </div>
-    </div>
 
-}
+    @*<p>@Model.Project</p>
+        @if (@Model.AssignedTo != null)
+        {
+            <span>Assigned User : </span>
+            <span>@Model.AssignedTo.UserName</span>
+        }
+        @if (Model.Attachments == null || Model.Attachments.Count() <= 0)
+        {
+            <h5>No Attachement</h5>
+        }
+        else
+        {
+            <h5 style="margin-top:15px;">Attachments : </h5>
+            <div class="row">
+                <div class="col-md-2" style="margin-bottom : 12px; margin-top:10px;">
+                    @foreach (var record in Model.Attachments)
+                    {
+                        <a href="@Url.Content(record?.MediaUrl ?? "~")" target="_blank">@(record?.MediaUrl)</a>
+                        <form method="post" action="@Url.Action("DeleteAttachments", "Tickets",new { id = record.Id })"><button class="small xs" style="margin-bottom:15px">Delete</button> </form>
+                    }
+                </div>
+            </div>
 
-@if (Model.TicketHistory == null@*|| Model.Attachments.Count() <= 0*@)
-{
-<h5>No History</h5>
-}
-else
-{
+        }*@
 
-<h5 style="margin-top:15px;">History : </h5>
-<div class="row">
-    <div class="col-md-2" style="margin-bottom : 12px; margin-top:10px;">
-        @foreach (var record in Model.TicketHistory)
+    @*@if (Model.TicketHistory == null)
+        {
+            <h5>No History</h5>
+        }
+        else
         {
 
-            <p>@nameof(record.Property):@record.Property</p>
-            <p>@nameof(record.OldValue):@record.OldValue</p>
-            <p>@nameof(record.NewValue):@record.NewValue</p>
-            <p>@nameof(record.User.UserName):@record.User.UserName</p>
-            <p>@nameof(record.DateChanged):@record.DateChanged</p>
+            <h5 style="margin-top:15px;">History : </h5>
+            <div class="row">
+                <div class="col-md-2" style="margin-bottom : 12px; margin-top:10px;">
+                    @foreach (var record in Model.TicketHistory)
+                    {
+
+                        <p>@nameof(record.Property):@record.Property</p>
+                        <p>@nameof(record.OldValue):@record.OldValue</p>
+                        <p>@nameof(record.NewValue):@record.NewValue</p>
+                        <p>@nameof(record.User.UserName):@record.User.UserName</p>
+                        <p>@nameof(record.DateChanged):@record.DateChanged</p>
+                    }
+                </div>
+            </div>
+
+        }*@
+    @*<div>
+        <h3>@Model.Project</h3>*@
+    @*<h4>Comments</h4>
+        @foreach (var record in Model.Comments)
+        {
+            <p style="margin-bottom:-0px">@record.Comment</p>
+
+            <p>@Html.ActionLink("Edit", "EditComment", new { id = record.Id }) </p>
+            <form method="post" action="@Url.Action("Delete", "Tickets",new { id = record.Id })"><button class="small xs" style="margin-bottom:15px">Delete</button> </form>
         }
-    </div>
-</div>
+        @*</div>*@
 
-}
-<div>
-    <h3>@Model.Project</h3>
-    <h4>Comments</h4>
-    @foreach (var record in Model.Comments)
-    {
-        <p style="margin-bottom:-0px">@record.Comment</p>
+    @*<form action="@Url.Action("CreateComment","Tickets", new { TicketId = Model.Id })" method="post">
+            <div class="form-group">
+                <h4>Comment</h4>
+                <textarea name="Comment" placeholder="Leave a comment"></textarea>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>*@
 
-        <p>@Html.ActionLink("Edit", "EditComment", new { id = record.Id }) </p>
-        <form method="post" action="@Url.Action("Delete", "Tickets",new { id = record.Id })"><button class="small xs" style="margin-bottom:15px">Delete</button> </form>
-    }
-</div>
+    @*@Html.Partial("_LoginPartial")*@
 
-<form action="@Url.Action("CreateComment","Tickets", new { TicketId = Model.Id })" method="post">
-    <div class="form-group">
-        <h4>Comment</h4>
-        <textarea name="Comment" placeholder="Leave a comment"></textarea>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
-</form>
 
+
+    <footer class="footer">
+        <div class="container-fluid clearfix">
+
+            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">
+                Hand-crafted & made with
+                <i class="mdi mdi-heart text-danger"></i>
+            </span>
+        </div>
+    </footer>
+
+    <script type="text/javascript"
+            src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js">
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#sample-datatables').DataTable();
+        });
+    </script>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+</body>
+<!-- partial -->
+</html>

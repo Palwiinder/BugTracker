@@ -7,6 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Star Admin Free Bootstrap Admin Dashboard Template</title>
     <!-- plugins:css -->
+    @section css {
+        <link rel="stylesheet"
+              href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+    }
+
     <link rel="stylesheet" href="~/Template/vendors/iconfonts/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="~/Template/vendors/css/vendor.bundle.base.css">
     <link rel="stylesheet" href="~/Template/vendors/css/vendor.bundle.addons.css">
@@ -21,6 +26,7 @@
         .nav-link {
             padding: 5px !important;
         }
+
         .nav-item {
             width: 100%;
         }
@@ -172,9 +178,9 @@
         <div class="col-lg-8"> @RenderBody()</div>
     </div>
     @*@Html.Partial("_LoginPartial")*@
-    
-        
-   
+
+
+
     <footer class="footer">
         <div class="container-fluid clearfix">
 
@@ -184,6 +190,17 @@
             </span>
         </div>
     </footer>
+    @section Scripts {
+        <script type="text/javascript"
+                src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js">
+        </script>
+        <script type="text/javascript">
+        $(document).ready(function () {
+            $('#sample-datatables').DataTable();
+        });
+        </script>
+    }
+
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
