@@ -227,7 +227,7 @@ namespace Mvc2.Controllers
                 }
             }
 
-            
+            //var t = DbContext.TicketsPriorityDatabase.FirstOrDefault(p => p.Name.ToList(); == formData.TicketPriority);
             var tp = DbContext.TicketsPriorityDatabase.FirstOrDefault(p => p.Id == formData.PriorityId);
             var type = DbContext.TicketsTypeDatabase.FirstOrDefault(p => p.Id == formData.TypeId);
 
@@ -246,10 +246,11 @@ namespace Mvc2.Controllers
 
             foreach (var user in ticket.SendNotification)
             {
-                var userM = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-                userM.SendEmail(userId, "Notification", "There Are some changes in a Ticket");
+                var usermanager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                userManager.SendEmail(userId, "Notification", "There Are some changes in a Ticket");
             }
-
+            var userM = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            userM.SendEmail(userId, "Notification", "There is achange in a Ticket  You Belong To");
             DbContext.SaveChanges();
             return RedirectToAction(nameof(TicketsController.Tickets));
         }
@@ -580,6 +581,10 @@ namespace Mvc2.Controllers
                     history.Property = property;
                     history.TicketId = ticket.Id;
                     history.UserId = userId;
+                    //if(property == "TicketPriorityId")
+                    //{
+                    //    var priority = DbContext.TicketsPriorityDatabase.FirstOrDefault(p => p.Id.ToString();== history.OldValue )
+                    //}
                     ticketHistory.Add(history);
                 }
             }
