@@ -58,11 +58,18 @@
                 </p>
             }
         </section>
-        
-            <a href="@Url.Action("DemoLogins", "Account",new { user="Admin"})">Admin</a>
-            <a href="@Url.Action("DemoLogins", "Account",new { user="Project Manager"})" >Project Manager</a>
-            <a href="@Url.Action("DemoLogins", "Account",new { user="Submitter"})" >Submitter</a>
-            <a href="@Url.Action("DemoLogins", "Account",new { user="Developer"})">Developer</a>
+        <div class="dropdown">
+            <button style="background-color:seagreen;height:40px;padding:3px;" class="dropbtn small">Demo Users</button>
+            <div style="background-color:white" class="dropdown-content">
+                <div>
+                <a style="color:dodgerblue; padding-left:14px" href="@Url.Action("DemoLogins", "Account",new { user="Admin"})">Admin</a>
+                </div>
+                <a style="color:dodgerblue; padding-left:14px" href="@Url.Action("DemoLogins", "Account",new { user="Project Manager"})">Project Manager</a>
+                <a style="color:dodgerblue;  padding-left:14px" href="@Url.Action("DemoLogins", "Account",new { user="Submitter"})">Submitter</a>
+                <a style="color:dodgerblue;padding-left:14px" href="@Url.Action("DemoLogins", "Account",new { user="Developer"})">Developer</a>
+            </div>
+        </div>
+            
     </div>
     <div class="col-md-4">
         <section id="socialLoginForm">
