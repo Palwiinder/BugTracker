@@ -3,7 +3,7 @@
 <h2>AssignProjects</h2>
 
 <div class="content-wrapper">
-   
+
     <section class="content">
         <form action="@Url.Action("AssignProjects", "Project")" method="post">
             @Html.ValidationSummary(false)
@@ -12,7 +12,6 @@
             {
                 <p>Add User</p>
                 <div class="form-group">
-
                     @Html.ListBoxFor(p => p.SelectedAddUsers, Model.AddUsers)
                 </div>
             }

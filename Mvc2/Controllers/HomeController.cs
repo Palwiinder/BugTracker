@@ -17,6 +17,6 @@ namespace Mvc2.Controllers
         public ActionResult Index()
         {
             return View();
-        }  
+        }
     }
 }

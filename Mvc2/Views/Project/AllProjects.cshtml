@@ -1,6 +1,5 @@
 ﻿@model IEnumerable<Mvc2.Models.ViewModel.IndexProjectViewModel>
 
-
 <h2>AllProject</h2>
 
 <p>
@@ -23,7 +22,6 @@
             </th>
             <th>
             </th>
-
         </tr>
     </thead>
     <tbody>
@@ -42,7 +40,6 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.TicketCount)
                 </td>
-
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.ProjectId }) |
                     @Html.ActionLink("Details", "FullDetail", new { id = item.ProjectId })|
@@ -54,6 +51,4 @@
         }
 
     </tbody>
-
 </table>
-<h1>You cant see this</h1>

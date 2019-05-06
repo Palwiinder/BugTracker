@@ -3,7 +3,6 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
 <form method="post">
     @Html.ValidationSummary(false)
 
@@ -15,11 +14,7 @@
             @Html.ActionLink("Manage Roles", "AssignRole", new { id = user.Id })
         </div>
     }
-
-
-
     <div class="">
         <button type="submit" class="btn btn-default">Submit</button>
     </div>
-
 </form>

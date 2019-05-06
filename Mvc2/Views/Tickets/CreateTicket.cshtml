@@ -3,7 +3,6 @@
     ViewBag.Title = "CreateTicket";
 }
 
-
 <form method="post" enctype="multipart/form-data">
     @Html.ValidationSummary(false)
 
@@ -19,6 +18,7 @@
     <div class="form-group">
         @Html.DropDownListFor(p => p.TypeId, Model.TicketType)
     </div>
+
     <div class="form-group">
         @Html.DropDownListFor(p => p.PriorityId, Model.TicketPriority)
     </div>

@@ -4,7 +4,6 @@
     Layout = null;
 }
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,7 +38,7 @@
     <div class="container-scroller" style="margin-bottom: 75px;">
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-            <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
+            <div style="background:linear-gradient(120deg, #00e4d0, #5983e8)" class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
                 <h3>
                     Bug Tracker
                 </h3>
@@ -111,8 +110,6 @@
 
     </div>
 
-
-
     <table id="sample-datatables" class="table table-striped">
         <thead>
             <tr>
@@ -170,19 +167,19 @@
                         @Html.ActionLink("Edit", "Edit", new { id = item.TicketId }) |
                         @Html.ActionLink("Detail", "Detail", new { id = item.TicketId }) |
                         @Html.ActionLink("Mange Users", "AssignTickets", new { TicketId = item.TicketId })|
-                        @Html.ActionLink("SendNotification", "AddNotifications", new { TicketId = item.TicketId })|
-                       
-                    
-                        @Html.ActionLink("RemoveNotification", "RemoveNotifications", new { TicketId = item.TicketId })
+
+                        <div style="padding:3px;" class="w3-dropdown-content w3-bar-block w3-card-4">
+
+                            @Html.ActionLink("SendNotification", "AddNotifications", new { TicketId = item.TicketId })|
+                            @Html.ActionLink("RemoveNotification", "RemoveNotifications", new { TicketId = item.TicketId })
+                        </div>
+
+
                     </td>
                 </tr>
             }
         </tbody>
     </table>
-
-
-
-
 
     <footer class="footer">
         <div class="container-fluid clearfix">

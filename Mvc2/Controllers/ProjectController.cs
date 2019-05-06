@@ -66,7 +66,7 @@ namespace Mvc2.Controllers
                 return RedirectToAction(nameof(HomeController.Index));
 
             }
-            var project = ProjectHelper.GetAllProjects().Where(p=> p.Projectid == id).FirstOrDefault();
+            var project = ProjectHelper.GetAllProjects().Where(p => p.Projectid == id).FirstOrDefault();
             project.Archive = true;
             DbContext.SaveChanges();
             return RedirectToAction(nameof(HomeController.Index));
@@ -169,13 +169,9 @@ namespace Mvc2.Controllers
                 ProjectName = project.ProjectName,
                 DateCreated = project.DateCreated,
                 Users = project.Users
-
-
             };
             return View(model);
         }
-
-
 
         public ActionResult AssignProjects(int? ProjectId)
         {
@@ -233,38 +229,40 @@ namespace Mvc2.Controllers
             DbContext.SaveChanges();
             return RedirectToAction("Index");
         }
+
         public ActionResult Unarthorize()
         {
             return View();
         }
+
         public ActionResult Exception()
         {
             return View();
         }
 
-        
         public ActionResult Dashboard()
         {
             var model = new DashBoardViewModel();
+
             var tickets = DbContext.TicketsDatabase.Count();
             var projects = DbContext.ProjectDatabase.Count();
-            var open = DbContext.TicketsDatabase.Where( p => p.TicketStatus.Name == "Open").Count();
-            var resolved = DbContext.TicketsDatabase.Where( p => p.TicketStatus.Name == "Resolved").Count();
-            var rejected = DbContext.TicketsDatabase.Where( p => p.TicketStatus.Name == "Rejected").Count();
+            var open = DbContext.TicketsDatabase.Where(p => p.TicketStatus.Name == "Open").Count();
+            var resolved = DbContext.TicketsDatabase.Where(p => p.TicketStatus.Name == "Resolved").Count();
+            var rejected = DbContext.TicketsDatabase.Where(p => p.TicketStatus.Name == "Rejected").Count();
             model.Tickets = tickets;
             model.Project = projects;
             model.Open = open;
             model.Resolved = resolved;
             model.Rejected = rejected;
 
+
             if (User.IsInRole("Submitter"))
             {
                 var userId = User.Identity.GetUserId();
-
                 var userProject = DbContext.ProjectDatabase
                     .Where(p => p.Users.Any(a => a.Id == userId)).Count();
                 var userTicket = DbContext.TicketsDatabase
-                    .Where(p => p.CreatedBy.Id == userId)
+                    .Where(p => p.CreatedById == userId)
                     .Select(p => new { p.TicketStatus }).ToList();
 
                 var ticket = userTicket.Count();
@@ -276,14 +274,37 @@ namespace Mvc2.Controllers
                 var rejectedTickets = userTicket
                     .Where(p => p.TicketStatus.Name == "Rejected").Count();
 
-                model.Tickets = tickets;
+                model.Tickets = ticket;
                 model.Open = openTickets;
                 model.Resolved = resolvedTickets;
                 model.Rejected = rejectedTickets;
                 model.Project = userProject;
-                //model. = members;
             }
 
+            if (User.IsInRole("Developer"))
+            {
+                var userId = User.Identity.GetUserId();
+                var userProject = DbContext.ProjectDatabase
+                    .Where(p => p.Users.Any(a => a.Id == userId)).Count();
+                var userTicket = DbContext.TicketsDatabase
+                    .Where(p => p.AssignedToId == userId)
+                    .Select(p => new { p.TicketStatus }).ToList();
+
+                var ticket = userTicket.Count();
+
+                var openTickets = userTicket
+              .Where(p => p.TicketStatus.Name == "Open").Count();
+                var resolvedTickets = userTicket
+                    .Where(p => p.TicketStatus.Name == "Resolved").Count();
+                var rejectedTickets = userTicket
+                    .Where(p => p.TicketStatus.Name == "Rejected").Count();
+
+                model.Tickets = ticket;
+                model.Open = openTickets;
+                model.Resolved = resolvedTickets;
+                model.Rejected = rejectedTickets;
+                model.Project = userProject;
+            }
             return View(model);
         }
     }

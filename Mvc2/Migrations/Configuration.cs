@@ -73,7 +73,6 @@ namespace Mvc2.Migrations
                 userManager.AddToRole(adminUser.Id, "Admin");
             }
 
-
             ApplicationUser projectManagerUser;
 
             if (!context.Users.Any(p => p.UserName == "projectManager@mybugtracker.com"))
@@ -116,7 +115,6 @@ namespace Mvc2.Migrations
                 userManager.AddToRole(developerUser.Id, "Developer");
             }
 
-
             ApplicationUser submitterUser;
 
             if (!context.Users.Any(p => p.UserName == "submitter@mybugtracker.com"))
@@ -138,25 +136,27 @@ namespace Mvc2.Migrations
                 userManager.AddToRole(submitterUser.Id, "Submitter");
             }
 
-
             if (!context.TicketsTypeDatabase.Any(p => p.Name == "Bug"))
             {
                 var bug = new TicketType();
                 bug.Name = "Bug";
                 context.TicketsTypeDatabase.Add(bug);
             }
+
             if (!context.TicketsTypeDatabase.Any(p => p.Name == "Feature"))
             {
                 var feature = new TicketType();
                 feature.Name = "Feature";
                 context.TicketsTypeDatabase.Add(feature);
             }
+
             if (!context.TicketsTypeDatabase.Any(p => p.Name == "Database"))
             {
                 var database = new TicketType();
                 database.Name = "Database";
                 context.TicketsTypeDatabase.Add(database);
             }
+
             if (!context.TicketsTypeDatabase.Any(p => p.Name == "Support"))
             {
                 var support = new TicketType();
@@ -164,20 +164,20 @@ namespace Mvc2.Migrations
                 context.TicketsTypeDatabase.Add(support);
             }
 
-
-
             if (!context.TicketsPriorityDatabase.Any(p => p.Name == "Low"))
             {
                 var low = new TicketPriority();
                 low.Name = "Low";
                 context.TicketsPriorityDatabase.Add(low);
             }
+
             if (!context.TicketsPriorityDatabase.Any(p => p.Name == "Medium"))
             {
                 var medium = new TicketPriority();
                 medium.Name = "Medium";
                 context.TicketsPriorityDatabase.Add(medium);
             }
+
             if (!context.TicketsPriorityDatabase.Any(p => p.Name == "High"))
             {
                 var high = new TicketPriority();
@@ -185,20 +185,20 @@ namespace Mvc2.Migrations
                 context.TicketsPriorityDatabase.Add(high);
             }
 
-
-
             if (!context.TicketsStatusDatabase.Any(p => p.Name == "Open"))
             {
                 var open = new TicketStatus();
                 open.Name = "Open";
                 context.TicketsStatusDatabase.Add(open);
             }
+
             if (!context.TicketsStatusDatabase.Any(p => p.Name == "Resolved"))
             {
                 var resolved = new TicketStatus();
                 resolved.Name = "Resolved";
                 context.TicketsStatusDatabase.Add(resolved);
             }
+
             if (!context.TicketsStatusDatabase.Any(p => p.Name == "Rejected"))
             {
                 var rejected = new TicketStatus();

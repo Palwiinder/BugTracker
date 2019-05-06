@@ -19,6 +19,7 @@ namespace Mvc2.Models.Domain
             Comments = new List<TicketComment>();
             Attachments = new List<TicketAttachments>();
             TicketHistory = new List<TicketHistory>();
+            SendNotification = new List<ApplicationUser>();
         }
 
         public virtual Project Project { get; set; }
@@ -29,11 +30,12 @@ namespace Mvc2.Models.Domain
 
         public virtual TicketPriority TicketPriority { get; set; }
         public int TicketPriorityId { get; set; }
+
         public virtual TicketStatus TicketStatus { get; set; }
         public int TicketStatusId { get; set; }
+
         public virtual ApplicationUser CreatedBy { get; set; }
         public string CreatedById { get; set; }
-        public virtual List<ApplicationUser> SendNotification { get; set; }
 
         public virtual ApplicationUser AssignedTo { get; set; }
         public string AssignedToId { get; set; }
@@ -41,5 +43,6 @@ namespace Mvc2.Models.Domain
         public virtual List<TicketComment> Comments { get; set; }
         public virtual List<TicketAttachments> Attachments { get; set; }
         public virtual List<TicketHistory> TicketHistory { get; set; }
+        public virtual List<ApplicationUser> SendNotification { get; set; }
     }
 }

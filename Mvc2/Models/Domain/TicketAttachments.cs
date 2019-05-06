@@ -16,7 +16,6 @@ namespace Mvc2.Models.Domain
         public string FilePath { get; set; }
         public string Description { get; set; }
         public DateTime DateCreated { get; set; }
-
         public string MediaUrl { get; set; }
 
         public virtual Ticket Ticket { get; set; }

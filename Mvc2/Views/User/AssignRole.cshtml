@@ -3,17 +3,11 @@
     ViewBag.Title = "AssignRole";
 }
 
-<h2>AssignRole</h2>
-
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <!-- Main content -->
     <section class="content">
-
-
-
-
         <form action="@Url.Action("AssignRole", "User")" method="post">
             @Html.ValidationSummary(false)
 
@@ -21,7 +15,7 @@
             {
                 <p>Add Roles</p>
                 <div class="form-group">
-                    
+
                     @Html.ListBoxFor(p => p.SelectedAddRoles, Model.AddRoles)
                 </div>
             }
@@ -29,16 +23,11 @@
             {
                 <p>Remove Roles</p>
                 <div class="form-group">
-                    
                     @Html.ListBoxFor(p => p.SelectedRemoveRoles, Model.RemoveRoles)
                 </div>
             }
             <input type="hidden" name="UserId" value="@Model.UserId" />
             <input type="submit" value="Submit!" />
-
         </form>
-
-
     </section>
-    
 </div>
