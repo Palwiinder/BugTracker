@@ -180,9 +180,9 @@ namespace Mvc2.Controllers
                 ticket.CreatedBy = applicationUser;
                 ticket.ProjectId = formData.ProjectId;
                 ticket.TicketStatusId = DbContext.TicketsStatusDatabase.First(p => p.Name == "Open").Id;
-                var userM = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                var userMe = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
 
-                userM.SendEmail(userId, "Notification", "There is a new Ticket Created for project You Belong To");
+                userMe.SendEmail(userId, "Notification", "There is a new Ticket Created for project You Belong To");
                 DbContext.TicketsDatabase.Add(ticket);
             }
             else
@@ -219,9 +219,9 @@ namespace Mvc2.Controllers
                         UserId = ticket.CreatedById,
 
                     };
-                    var userM = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                    var userMa = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
 
-                    userM.SendEmail(userId, "Notification", "There is a new Attachment for Ticket You Belong To");
+                    userMa.SendEmail(userId, "Notification", "There is a new Attachment for Ticket You Belong To");
                     ticket.Attachments.Add(attachment);
                     DbContext.TicketsAttachmentsDatabase.Add(attachment);
                 }
@@ -572,6 +572,7 @@ namespace Mvc2.Controllers
             {
                 var originalValue = originalValues[property]?.ToString();
                 var currentValue = currentValues[property]?.ToString();
+  
                 if (originalValue != currentValue)
                 {
                     var history = new TicketHistory();
@@ -581,10 +582,6 @@ namespace Mvc2.Controllers
                     history.Property = property;
                     history.TicketId = ticket.Id;
                     history.UserId = userId;
-                    //if(property == "TicketPriorityId")
-                    //{
-                    //    var priority = DbContext.TicketsPriorityDatabase.FirstOrDefault(p => p.Id.ToString();== history.OldValue )
-                    //}
                     ticketHistory.Add(history);
                 }
             }

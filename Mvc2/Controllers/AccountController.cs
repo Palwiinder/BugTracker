@@ -122,6 +122,35 @@ namespace Mvc2.Controllers
         }
 
 
+        //public ActionResult DemoUser(string userrole)
+        //{
+        //    ApplicationUser user = null;
+        //    var signInManager = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+        //    AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+        //    if (userrole == "DemoAdmin")
+        //    {
+        //        user = UserManager.FindByEmail("demoadmin@admin.com");
+        //    }
+        //    if (userrole == "DemoPM")
+        //    {
+        //        user = UserManager.FindByEmail("demoPM@pm.com");
+        //    }
+        //    if (userrole == "DemoDev")
+        //    {
+        //        user = UserManager.FindByEmail("demoDev@dev.com");
+        //    }
+        //    if (userrole == "DemoSubmitter")
+        //    {
+        //        user = UserManager.FindByEmail("demoSubmitter@Sub.com");
+        //    }
+        //    if (user != null)
+        //    {
+        //        signInManager.SignIn(user, isPersistent: false, rememberBrowser: false);
+        //    }
+
+        //    return RedirectToAction("Index", "");
+        //}
+
         //
         // GET: /Account/VerifyCode
         [AllowAnonymous]
